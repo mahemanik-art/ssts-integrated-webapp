@@ -23,11 +23,17 @@
 }
 body {
   margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   color: var(--ink);
   background: var(--paper);
   font-family: "Source Sans 3", sans-serif;
   font-size: 18px;
   line-height: 1.55;
+}
+main {
+  flex: 1 0 auto;
 }
 .wrap {
   width: min(1120px, calc(100% - 40px));
@@ -184,6 +190,7 @@ body {
   margin-bottom: 28px;
 }
 footer {
+  flex-shrink: 0;
   background: #263c46;
   color: white;
   padding: 28px 0;

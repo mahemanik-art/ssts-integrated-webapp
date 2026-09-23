@@ -1,4 +1,4 @@
-package org.sstamilschool.web;
+package org.sstamilschool;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

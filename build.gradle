@@ -18,7 +18,22 @@ repositories { mavenCentral() }
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') { useJUnitPlatform() }
+
+task executeSchema(type: Exec) {
+    description 'Execute SQL schema file against PostgreSQL'
+    def dbHost = System.getenv('DB_HOST') ?: 'dpg-dappla49v7es739g7rrg-a'
+    def dbPort = System.getenv('DB_PORT') ?: '5432'
+    def dbName = System.getenv('DB_NAME') ?: 'ssts_pr'
+    def dbUser = System.getenv('DB_USERNAME') ?: ''
+    def dbPass = System.getenv('DB_PASSWORD') ?: ''
+    commandLine 'psql', '-h', dbHost, '-p', dbPort, '-U', dbUser, '-d', dbName, '-f', 'sql/schema.sql'
+    environment 'PGPASSWORD', dbPass
+}
