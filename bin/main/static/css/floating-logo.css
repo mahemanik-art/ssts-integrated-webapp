@@ -10,11 +10,6 @@
   left: clamp(24px, 6vw, 120px);
   top: -27px;
   z-index: 5;
-  background: #edf7fb;
-  border: 1px solid #4d98a2;
-  border-radius: 8px;
-  padding: 8px 12px;
-  box-shadow: 0 14px 28px #0009;
 }
 .template-header .header-logo img {
   width: min(330px, 32vw);
@@ -23,7 +18,6 @@
   .template-header .header-logo {
     left: 20px;
     top: 18px;
-    padding: 5px 8px;
   }
   .template-header .header-logo img {
     width: 145px;

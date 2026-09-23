@@ -47,9 +47,6 @@ body,
   color: #70d6c7;
 }
 .template-header .header-logo {
-  background: #edf7fb;
-  border-radius: 6px;
-  padding: 5px 10px;
 }
 .template-header .header-logo img {
   width: min(300px, 32vw);
