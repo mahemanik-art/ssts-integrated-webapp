@@ -32,7 +32,7 @@ body {
 }
 .hero {
   background-image:
-    linear-gradient(110deg, rgba(6, 18, 24, 0.96), rgba(11, 41, 48, 0.78)), url("/images/ssts-logo.png");
+    linear-gradient(110deg, rgba(6, 18, 24, 0.96), rgba(11, 41, 48, 0.78)), url("/images/ssts-logo.jpg");
 }
 .hero:after {
   background: linear-gradient(90deg, rgba(6, 18, 24, 0.55), transparent);

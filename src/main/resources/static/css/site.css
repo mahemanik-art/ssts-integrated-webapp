@@ -76,7 +76,7 @@ body {
 .hero {
   background:
     linear-gradient(110deg, rgba(30, 52, 62, 0.83), rgba(30, 52, 62, 0.43)),
-    url("/images/ssts-logo.png") center/cover no-repeat;
+    url("/images/ssts-logo.jpg") center/cover no-repeat;
   min-height: 490px;
   display: grid;
   align-items: center;

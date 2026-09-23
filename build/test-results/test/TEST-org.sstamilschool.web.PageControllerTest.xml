@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="org.sstamilschool.web.PageControllerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-09-23T08:23:11" hostname="Sarithas-MacBook-Pro.local" time="0.629">
+<testsuite name="org.sstamilschool.web.PageControllerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-09-23T08:50:34" hostname="Sarithas-MacBook-Pro.local" time="0.622">
   <properties/>
-  <testcase name="informationalPagesAreMapped()" classname="org.sstamilschool.web.PageControllerTest" time="0.614"/>
-  <testcase name="homeShowsSchoolWelcome()" classname="org.sstamilschool.web.PageControllerTest" time="0.013"/>
-  <system-out><![CDATA[13:53:10.373 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [org.sstamilschool.web.PageControllerTest]: PageControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-13:53:10.434 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration org.sstamilschool.web.SstsIntegratedWebappApplication for test class org.sstamilschool.web.PageControllerTest
+  <testcase name="informationalPagesAreMapped()" classname="org.sstamilschool.web.PageControllerTest" time="0.606"/>
+  <testcase name="homeShowsSchoolWelcome()" classname="org.sstamilschool.web.PageControllerTest" time="0.015"/>
+  <system-out><![CDATA[14:20:33.658 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [org.sstamilschool.web.PageControllerTest]: PageControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+14:20:33.715 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration org.sstamilschool.web.SstsIntegratedWebappApplication for test class org.sstamilschool.web.PageControllerTest
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -15,13 +15,13 @@
 
  :: Spring Boot ::                (v3.4.3)
 
-2026-09-23T13:53:10.604+05:30  INFO 59383 --- [ssts-integrated-webapp] [    Test worker] o.sstamilschool.web.PageControllerTest   : Starting PageControllerTest using Java 21.0.4 with PID 59383 (started by sarithamakineni in /Users/sarithamakineni/workspace/ssts-integrated-webapp)
-2026-09-23T13:53:10.605+05:30  INFO 59383 --- [ssts-integrated-webapp] [    Test worker] o.sstamilschool.web.PageControllerTest   : No active profile set, falling back to 1 default profile: "default"
-2026-09-23T13:53:10.879+05:30  INFO 59383 --- [ssts-integrated-webapp] [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
-2026-09-23T13:53:10.987+05:30  INFO 59383 --- [ssts-integrated-webapp] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2026-09-23T13:53:10.987+05:30  INFO 59383 --- [ssts-integrated-webapp] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2026-09-23T13:53:10.988+05:30  INFO 59383 --- [ssts-integrated-webapp] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 1 ms
-2026-09-23T13:53:11.010+05:30  INFO 59383 --- [ssts-integrated-webapp] [    Test worker] o.sstamilschool.web.PageControllerTest   : Started PageControllerTest in 0.54 seconds (process running for 1.074)
+2026-09-23T14:20:33.875+05:30  INFO 85994 --- [ssts-integrated-webapp] [    Test worker] o.sstamilschool.web.PageControllerTest   : Starting PageControllerTest using Java 21.0.4 with PID 85994 (started by sarithamakineni in /Users/sarithamakineni/workspace/ssts-integrated-webapp)
+2026-09-23T14:20:33.875+05:30  INFO 85994 --- [ssts-integrated-webapp] [    Test worker] o.sstamilschool.web.PageControllerTest   : No active profile set, falling back to 1 default profile: "default"
+2026-09-23T14:20:34.128+05:30  INFO 85994 --- [ssts-integrated-webapp] [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page template: index
+2026-09-23T14:20:34.223+05:30  INFO 85994 --- [ssts-integrated-webapp] [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2026-09-23T14:20:34.223+05:30  INFO 85994 --- [ssts-integrated-webapp] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2026-09-23T14:20:34.224+05:30  INFO 85994 --- [ssts-integrated-webapp] [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 0 ms
+2026-09-23T14:20:34.240+05:30  INFO 85994 --- [ssts-integrated-webapp] [    Test worker] o.sstamilschool.web.PageControllerTest   : Started PageControllerTest in 0.492 seconds (process running for 1.015)
 ]]></system-out>
   <system-err><![CDATA[Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
 WARNING: A Java agent has been loaded dynamically (/Users/sarithamakineni/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.15.11/a38b16385e867f59a641330f0362ebe742788ed8/byte-buddy-agent-1.15.11.jar)
