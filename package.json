@@ -1,0 +1,13 @@
+{
+  "name": "sstams-integrated-webapp",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Sandy Springs Tamil School integrated webapp",
+  "scripts": {
+    "format": "prettier --write \"src/main/resources/static/**/*.css\" \"src/main/resources/templates/**/*.html\"",
+    "lint": "prettier --check \"src/main/resources/static/**/*.css\" \"src/main/resources/templates/**/*.html\""
+  },
+  "devDependencies": {
+    "prettier": "^3.4.0"
+  }
+}

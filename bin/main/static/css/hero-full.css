@@ -1,21 +1,189 @@
 /* Full-bleed hero: heading above the sample learning image slider, image sized at 75% (reduced 25%) */
-.template-hero{max-width:none;width:100%;padding:0;gap:0;grid-template-columns:1fr;min-height:calc(100vh - 140px);display:grid;align-items:center;justify-items:center;align-content:start}
-.hero-heading{text-align:center;width:100%;max-width:1120px;padding:clamp(46px,7.5vh,104px) 24px clamp(20px,3vh,34px);color:inherit}
+.template-hero {
+  max-width: none;
+  width: 100%;
+  padding: 0;
+  gap: 0;
+  grid-template-columns: 1fr;
+  min-height: calc(100vh - 140px);
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  align-content: start;
+}
+.hero-heading {
+  text-align: center;
+  width: 100%;
+  max-width: 1120px;
+  padding: clamp(22px, 3vh, 30px) 24px clamp(20px, 3vh, 34px);
+  color: inherit;
+}
 /* Old hero-copy typography for the same text, sized at 50% */
-.hero-heading h1{font-family:'Playfair Display',Georgia,serif;font-weight:800;font-size:clamp(1.5rem,2.9vw,3.3rem);line-height:.86;letter-spacing:-.06em;margin:0 0 10px;color:#f0f9fb}
-.hero-heading p{max-width:none;margin:10px auto 0;font-family:'Source Sans 3',sans-serif;font-size:clamp(1.05rem,1.5vw,1.25rem);line-height:1.5;color:#bdd5dc;opacity:1;white-space:nowrap}
-.hero-visual{width:100%;height:auto;display:grid;place-items:center;position:relative}
+.hero-heading h1 {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 800;
+  font-size: clamp(1.5rem, 2.9vw, 3.3rem);
+  line-height: 0.86;
+  letter-spacing: -0.06em;
+  margin: 0 0 10px;
+  color: #f0f9fb;
+}
+.hero-heading p {
+  max-width: none;
+  margin: 10px auto 0;
+  font-family: "Source Sans 3", sans-serif;
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  line-height: 1.5;
+  color: #bdd5dc;
+  opacity: 1;
+  white-space: nowrap;
+}
+.hero-visual {
+  width: 100%;
+  height: auto;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
 /* Image slider */
-.hero-slider{position:relative;width:75%;height:calc(75vh - 105px);min-height:calc(75vh - 105px);overflow:hidden;border-radius:0;border:0;box-shadow:none;background:#08223d}
-.hero-slider .slide{position:absolute;inset:0;opacity:0;transition:opacity .8s ease;pointer-events:none}
-.hero-slider .slide.active{opacity:1;pointer-events:auto}
-.hero-slider .slide img{display:block;width:100%;height:100%;object-fit:cover}
-.slider-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:46px;height:46px;padding:0;border-radius:50%;border:1px solid #ffcf45;background:rgba(6,27,51,.72);color:#ffcf45;font-size:1.5rem;line-height:1;cursor:pointer;display:grid;place-items:center;transition:background .2s ease,color .2s ease}
-.slider-nav:hover{background:#ffcf45;color:#08223d}
-.slider-nav.prev{left:16px}
-.slider-nav.next{right:16px}
-.slider-dots{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:10px;z-index:3}
-.slider-dots .dot{width:12px;height:12px;padding:0;border-radius:50%;border:1px solid #ffcf45;background:transparent;cursor:pointer}
-.slider-dots .dot.active{background:#ffcf45}
-.rating-badge{right:calc(12.5% + 24px);bottom:24px}
-@media(max-width:760px){.template-hero{min-height:auto;padding:0;align-content:start}.hero-heading{padding:56px 20px 22px}.hero-heading h1{font-size:clamp(1.45rem,7vw,2.25rem)}.hero-heading p{font-size:.8rem;max-width:none;white-space:nowrap}.hero-slider{width:100%;height:auto;min-height:45vh}.slider-nav{width:38px;height:38px;font-size:1.2rem}.slider-nav.prev{left:10px}.slider-nav.next{right:10px}.rating-badge{right:24px;bottom:16px}}
+.hero-slider {
+  position: relative;
+  width: 75%;
+  height: calc(75vh - 105px);
+  min-height: calc(75vh - 105px);
+  overflow: hidden;
+  border-radius: 0;
+  border: 0;
+  box-shadow: none;
+  background: #08223d;
+}
+.hero-slider .slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+.hero-slider .slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.hero-slider .slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.slider-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 46px;
+  height: 46px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid #ffcf45;
+  background: rgba(6, 27, 51, 0.72);
+  color: #ffcf45;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+.slider-nav:hover {
+  background: #ffcf45;
+  color: #08223d;
+}
+.slider-nav.prev {
+  left: 16px;
+}
+.slider-nav.next {
+  right: 16px;
+}
+.slider-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 3;
+}
+.slider-dots .dot {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid #ffcf45;
+  background: transparent;
+  cursor: pointer;
+}
+.slider-dots .dot.active {
+  background: #ffcf45;
+}
+.rating-badge {
+  position: absolute;
+  right: calc(12.5% + 24px);
+  bottom: 24px;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.rating-link {
+  color: #ffcf45;
+  font-size: clamp(0.8rem, 1.05vw, 0.95rem);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 207, 69, 0.4);
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+.rating-link:hover,
+.rating-link:focus-visible {
+  color: #ffe38a;
+  border-color: #ffe38a;
+}
+@media (max-width: 760px) {
+  .template-hero {
+    min-height: auto;
+    padding: 0;
+    align-content: start;
+  }
+  .hero-heading {
+    padding: 22px 20px 22px;
+  }
+  .hero-heading h1 {
+    font-size: clamp(1.45rem, 7vw, 2.25rem);
+  }
+  .hero-heading p {
+    font-size: 0.8rem;
+    max-width: none;
+    white-space: nowrap;
+  }
+  .hero-slider {
+    width: 100%;
+    height: auto;
+    min-height: 45vh;
+  }
+  .slider-nav {
+    width: 38px;
+    height: 38px;
+    font-size: 1.2rem;
+  }
+  .slider-nav.prev {
+    left: 10px;
+  }
+  .slider-nav.next {
+    right: 10px;
+  }
+  .rating-badge {
+    right: 24px;
+    bottom: 16px;
+  }
+}

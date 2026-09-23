@@ -1,22 +1,144 @@
 /* Featured donor cards beside the hero image slider */
-.hero-visual{display:flex;align-items:stretch;justify-content:center;gap:clamp(16px,2vw,30px);padding:0 clamp(20px,3vw,64px) clamp(20px,3vh,40px)}
-.hero-slider{flex:0 1 75%;width:auto;min-width:0;align-self:stretch}
-/* Card column spans the full slider height, top to bottom */
-.donor-cards{flex:0 0 auto;width:min(252px,23vw);display:grid;grid-template-rows:repeat(3,minmax(0,1fr));gap:14px;z-index:4}
-.donor-card{background:rgba(6,27,51,.85);border:1px solid #4d91aa;border-left:3px solid #ffcf45;border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;align-items:stretch;gap:10px;box-shadow:8px 8px 0 rgba(4,16,30,.45);overflow:hidden}
-/* Only the card contents slide/fade during rotation - the card frame stays put */
-.donor-card .donor-photo,.donor-card .donor-info{transition:opacity .35s ease,transform .35s ease}
-.donor-card.turning .donor-photo,.donor-card.turning .donor-info{opacity:0;transform:translateY(8px)}
-.donor-card .donor-photo{width:100%;height:96px;border-radius:10px;object-fit:cover;border:1px solid #4d91aa;background:#0a2c4d}
-.donor-card .donor-info{display:grid;gap:4px;min-width:0;text-align:left}
-.donor-card .donor-label{font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;color:#8fb2c6;opacity:.85}
-.donor-card .donor-name{font-family:'Playfair Display',Georgia,serif;font-weight:700;font-size:1.05rem;line-height:1.2;color:#f0f9fb}
-.donor-card .donor-biz{font-size:.82rem;line-height:1.4;color:#b9d0d5}
-/* Badge lives inside the slider, so anchor it to the slider frame */
-.hero-slider .rating-badge{right:20px;bottom:20px}
-@media(max-width:1100px){
-  .hero-visual{flex-wrap:wrap;align-items:center}
-  .hero-slider{flex:1 1 100%}
-  .donor-cards{width:100%;grid-template-columns:repeat(3,1fr);grid-template-rows:auto}
+.hero-visual {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: clamp(28px, 3.5vw, 52px);
+  padding: 0 clamp(20px, 3vw, 64px) clamp(20px, 3vh, 40px);
 }
-@media(max-width:640px){.donor-cards{grid-template-columns:1fr}}
+.hero-slider {
+  flex: 0 1 75%;
+  width: auto;
+  min-width: 0;
+  align-self: stretch;
+}
+.donor-cards {
+  flex: 0 0 auto;
+  width: min(252px, 23vw);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 4;
+  margin-top: -40px;
+}
+.donor-cards-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+}
+.donor-cards-header .donor-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ffcf45;
+  font-weight: 700;
+}
+.donor-card {
+  background: rgba(6, 27, 51, 0.85);
+  border: 1px solid #4d91aa;
+  border-left: 3px solid #ffcf45;
+  border-radius: 12px;
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  box-shadow: 8px 8px 0 rgba(4, 16, 30, 0.45);
+  overflow: hidden;
+}
+/* Only the card contents slide/fade during rotation - the card frame stays put */
+.donor-card .donor-photo,
+.donor-card .donor-info {
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+.donor-card.turning .donor-photo,
+.donor-card.turning .donor-info {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.donor-card .donor-photo {
+  width: 100%;
+  height: 150px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #4d91aa;
+  background: #0a2c4d;
+}
+.donor-card .donor-info {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  text-align: left;
+}
+.donor-card .donor-label {
+  font-size: 0.64rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8fb2c6;
+  opacity: 0.85;
+}
+.donor-card .donor-name {
+  font-family: "Playfair Display", Georgia, serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.2;
+  color: #f0f9fb;
+}
+.donor-card .donor-biz {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  color: #b9d0d5;
+}
+.donor-card .donor-link {
+  margin-top: 2px;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #ffcf45;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 207, 69, 0.4);
+  align-self: flex-start;
+  padding-bottom: 1px;
+}
+.donor-card .donor-link:hover,
+.donor-card .donor-link:focus-visible {
+  color: #ffe38a;
+  border-bottom-color: #ffe38a;
+}
+/* Badge lives inside the slider, so anchor it to the slider frame */
+.hero-slider .rating-badge {
+  right: 20px;
+  bottom: 20px;
+}
+@media (max-width: 1100px) {
+  .hero-visual {
+    align-items: center;
+  }
+  .hero-slider {
+    flex: 1 1 auto;
+  }
+  .donor-cards {
+    width: min(220px, 20vw);
+  }
+}
+@media (max-width: 900px) {
+  .hero-visual {
+    flex-wrap: wrap;
+  }
+  .donor-cards {
+    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+@media (max-width: 640px) {
+  .donor-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+}

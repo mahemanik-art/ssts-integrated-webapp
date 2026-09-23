@@ -1,1 +1,79 @@
-:root{--ink:#e6f0ee;--blue:#10232c;--deep:#09171d;--gold:#e9b949;--paper:#0b1820}body{background:#0b1820;color:#e6f0ee}.site-header{background:#10232c;border-bottom:1px solid #294650}.masthead .logo{background:#e6f0ee;border-radius:5px;padding:8px 12px}.details{color:#d2e1df}.nav{background:#09171d;border-top:1px solid #294650}.nav a:hover,.nav .active{background:#21414b;color:#fff}.hero{background-image:linear-gradient(110deg,rgba(6,18,24,.96),rgba(11,41,48,.78)),url('/images/ssts-logo.png')}.hero:after{background:linear-gradient(90deg,rgba(6,18,24,.55),transparent)}.accent,.cards span{color:#e9b949}.button{background:#e9b949;color:#0b1820}.button:hover{background:#f5ca65}.welcome span{color:#77c4c0}.band{background:#09171d;border-top:1px solid #294650;border-bottom:1px solid #294650}.cards article{background:#142b35;border-top-color:#e9b949;box-shadow:0 10px 26px #0008}.inner{background:linear-gradient(130deg,#0b1820,#142b35)}footer{background:#071217;border-top:1px solid #294650}.donor-marquee{background:#071217;border-bottom-color:#294650;color:#d2e1df}.marquee-label,.marquee-track b{color:#e9b949}
+:root {
+  --ink: #e6f0ee;
+  --blue: #10232c;
+  --deep: #09171d;
+  --gold: #e9b949;
+  --paper: #0b1820;
+}
+body {
+  background: #0b1820;
+  color: #e6f0ee;
+}
+.site-header {
+  background: #10232c;
+  border-bottom: 1px solid #294650;
+}
+.masthead .logo {
+  background: #e6f0ee;
+  border-radius: 5px;
+  padding: 8px 12px;
+}
+.details {
+  color: #d2e1df;
+}
+.nav {
+  background: #09171d;
+  border-top: 1px solid #294650;
+}
+.nav a:hover,
+.nav .active {
+  background: #21414b;
+  color: #fff;
+}
+.hero {
+  background-image:
+    linear-gradient(110deg, rgba(6, 18, 24, 0.96), rgba(11, 41, 48, 0.78)), url("/images/ssts-logo.png");
+}
+.hero:after {
+  background: linear-gradient(90deg, rgba(6, 18, 24, 0.55), transparent);
+}
+.accent,
+.cards span {
+  color: #e9b949;
+}
+.button {
+  background: #e9b949;
+  color: #0b1820;
+}
+.button:hover {
+  background: #f5ca65;
+}
+.welcome span {
+  color: #77c4c0;
+}
+.band {
+  background: #09171d;
+  border-top: 1px solid #294650;
+  border-bottom: 1px solid #294650;
+}
+.cards article {
+  background: #142b35;
+  border-top-color: #e9b949;
+  box-shadow: 0 10px 26px #0008;
+}
+.inner {
+  background: linear-gradient(130deg, #0b1820, #142b35);
+}
+footer {
+  background: #071217;
+  border-top: 1px solid #294650;
+}
+.donor-marquee {
+  background: #071217;
+  border-bottom-color: #294650;
+  color: #d2e1df;
+}
+.marquee-label,
+.marquee-track b {
+  color: #e9b949;
+}

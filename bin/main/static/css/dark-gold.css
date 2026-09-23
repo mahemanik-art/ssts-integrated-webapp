@@ -1,1 +1,112 @@
-:root{--ink:#f4f0e6;--blue:#1a2a31;--deep:#0c161b;--gold:#e6b64d;--paper:#101c22}body,.college-home{background:#101c22;color:#f4f0e6}.site-header,.college-home .site-header{background:#1a2a31;border-color:#3c5158}.nav{background:#0c161b}.nav a:hover,.nav .active{background:#283f48}.inner{background:linear-gradient(130deg,#101c22,#1a2a31)}.college-home .donor-marquee,.donor-marquee{background:#0c161b;border-color:#3c5158;color:#e7e1d2}.college-home .marquee-label,.college-home .marquee-track b,.marquee-label,.marquee-track b{color:#e6b64d}.template-header{border-bottom:1px solid #3c5158}.template-header nav a,.hero-copy h1{color:#f4f0e6}.template-header nav a.active,.college-home .accent,.college-home .cards span{color:#e6b64d}.template-header .header-logo{background:#f4f0e6;border-radius:4px;padding:7px 11px}.college-home .button,.button{background:#e6b64d;color:#101c22}.college-home .button:hover,.button:hover{background:#f3cc73}.hero-copy>p:not(.eyebrow),.intro-section span{color:#d9e6e2}.hero-visual>img{box-shadow:20px 22px 0 #354b43}.rating-badge{background:#1a2a31;color:#f4f0e6;box-shadow:0 13px 30px #0009}.rating-badge span{color:#e6b64d}.rating-badge small,.section-heading>p{color:#bdc9c2}.intro-section,.kural-section{background:#101c22}.intro-section h2,.learning-copy h2,.gallery-section h2{color:#f4f0e6}.learning-section{background:#172a2d;border-block:1px solid #3c5158}.purpose-list article{border-color:#52706d}.kural-section blockquote{color:#f0d595}.gallery-grid img{box-shadow:0 10px 20px #0006}.college-home footer,footer{background:#0c161b;border-color:#3c5158;color:#f4f0e6}
+:root {
+  --ink: #f4f0e6;
+  --blue: #1a2a31;
+  --deep: #0c161b;
+  --gold: #e6b64d;
+  --paper: #101c22;
+}
+body,
+.college-home {
+  background: #101c22;
+  color: #f4f0e6;
+}
+.site-header,
+.college-home .site-header {
+  background: #1a2a31;
+  border-color: #3c5158;
+}
+.nav {
+  background: #0c161b;
+}
+.nav a:hover,
+.nav .active {
+  background: #283f48;
+}
+.inner {
+  background: linear-gradient(130deg, #101c22, #1a2a31);
+}
+.college-home .donor-marquee,
+.donor-marquee {
+  background: #0c161b;
+  border-color: #3c5158;
+  color: #e7e1d2;
+}
+.college-home .marquee-label,
+.college-home .marquee-track b,
+.marquee-label,
+.marquee-track b {
+  color: #e6b64d;
+}
+.template-header {
+  border-bottom: 1px solid #3c5158;
+}
+.template-header nav a,
+.hero-copy h1 {
+  color: #f4f0e6;
+}
+.template-header nav a.active,
+.college-home .accent,
+.college-home .cards span {
+  color: #e6b64d;
+}
+.template-header .header-logo {
+  background: #f4f0e6;
+  border-radius: 4px;
+  padding: 7px 11px;
+}
+.college-home .button,
+.button {
+  background: #e6b64d;
+  color: #101c22;
+}
+.college-home .button:hover,
+.button:hover {
+  background: #f3cc73;
+}
+.hero-copy > p:not(.eyebrow),
+.intro-section span {
+  color: #d9e6e2;
+}
+.hero-visual > img {
+  box-shadow: 20px 22px 0 #354b43;
+}
+.rating-badge {
+  background: #1a2a31;
+  color: #f4f0e6;
+  box-shadow: 0 13px 30px #0009;
+}
+.rating-badge span {
+  color: #e6b64d;
+}
+.rating-badge small,
+.section-heading > p {
+  color: #bdc9c2;
+}
+.intro-section,
+.kural-section {
+  background: #101c22;
+}
+.intro-section h2,
+.learning-copy h2,
+.gallery-section h2 {
+  color: #f4f0e6;
+}
+.learning-section {
+  background: #172a2d;
+  border-block: 1px solid #3c5158;
+}
+.purpose-list article {
+  border-color: #52706d;
+}
+.kural-section blockquote {
+  color: #f0d595;
+}
+.gallery-grid img {
+  box-shadow: 0 10px 20px #0006;
+}
+.college-home footer,
+footer {
+  background: #0c161b;
+  border-color: #3c5158;
+  color: #f4f0e6;
+}
