@@ -1,0 +1,52 @@
+# IDE / Editor
+.vscode/launch.json
+.idea/
+*.iml
+*.swp
+*.swo
+
+# Build artifacts
+build/
+bin/
+*.jar
+*.war
+*.ear
+
+# Gradle
+.gradle/
+gradle/
+gradlew
+gradlew.bat
+
+# Node
+node_modules/
+package.json
+package-lock.json
+.pnpm-store/
+
+# Prettier
+.prettierignore
+.prettierrc
+
+# Spring Boot
+spring-boot-admin.log
+*.log
+logging.file.name=
+
+# Environment / Secrets
+.env
+.env.local
+application-local.properties
+application-dev.properties
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Coverage / Reports
+coverage/
+reports/
+test-results/

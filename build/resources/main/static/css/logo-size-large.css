@@ -1,8 +1,0 @@
-.template-header .header-logo img {
-  width: min(490px, 44vw);
-}
-@media (max-width: 760px) {
-  .template-header .header-logo img {
-    width: min(270px, 68vw);
-  }
-}
