@@ -1,0 +1,17 @@
+# Git and IDE metadata
+.git
+.gitignore
+.idea
+.vscode
+*.iml
+.DS_Store
+
+# Local build output (rebuilt inside the image)
+bin/
+build/
+.gradle/
+
+# Docs and container files (not needed in the build context)
+README.md
+Dockerfile
+docker-compose.yml
