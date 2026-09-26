@@ -9,17 +9,17 @@ html {
   background: #08223d;
 }
 body,
-.college-home {
+.school-home {
   background: linear-gradient(145deg, #08223d 0%, #0a4667 48%, #0e7081 100%);
   color: #f5f8fb;
 }
-.college-home .donor-marquee,
+.school-home .donor-marquee,
 .donor-marquee {
   background: linear-gradient(90deg, #061b33, #113759 48%, #061b33);
   border-bottom: 1px solid #3c85a2;
 }
-.college-home .marquee-label,
-.college-home .marquee-track b,
+.school-home .marquee-label,
+.school-home .marquee-track b,
 .marquee-label,
 .marquee-track b {
   color: #ffcf45;
@@ -42,21 +42,21 @@ body,
     linear-gradient(110deg, rgba(2, 8, 14, 0.95) 0%, rgba(3, 17, 26, 0.88) 48%, rgba(3, 14, 20, 0.72) 100%),
     url("/images/SSTS-BG.jpg");
 }
-.college-home .accent,
+.school-home .accent,
 .kural-section .accent {
   color: #ffcf45;
 }
 .hero-copy h1 em {
   color: #ffcf45;
 }
-.college-home .button,
+.school-home .button,
 .button {
   background: linear-gradient(135deg, #ffcf45, #f49a16);
   border-color: #ffcf45;
   color: #08223d;
   box-shadow: 0 10px 26px #0008;
 }
-.college-home .button:hover,
+.school-home .button:hover,
 .button:hover {
   background: linear-gradient(135deg, #ffe082, #ffb12b);
   border-color: #ffe082;
@@ -85,7 +85,7 @@ body,
 .kural-section {
   background: linear-gradient(120deg, #08223d, #155c7d, #0c385b);
 }
-.college-home footer,
+.school-home footer,
 footer {
   background: linear-gradient(90deg, #061b33, #08223d);
   border-top-color: #4d91aa;

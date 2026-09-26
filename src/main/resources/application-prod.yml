@@ -1,0 +1,18 @@
+# Production profile. Set SPRING_PROFILES_ACTIVE=prod (Render).
+# No SQL logging, ddl-auto=validate (fail fast on schema drift; schema is managed via
+# sql/schema.sql, not Hibernate), Thymeleaf template cache on.
+# Requires env vars: DB_HOST, DB_NAME, DB_USERNAME, DB_PASSWORD, APP_BASE_URL, MAIL_*.
+
+spring:
+  thymeleaf:
+    cache: true
+  datasource:
+    # No localhost default in production: DB_HOST must be set explicitly.
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT:5432}/${DB_NAME:ssts_pr}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false

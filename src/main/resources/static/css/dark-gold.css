@@ -6,12 +6,12 @@
   --paper: #101c22;
 }
 body,
-.college-home {
+.school-home {
   background: #101c22;
   color: #f4f0e6;
 }
 .site-header,
-.college-home .site-header {
+.school-home .site-header {
   background: #1a2a31;
   border-color: #3c5158;
 }
@@ -25,14 +25,14 @@ body,
 .inner {
   background: linear-gradient(130deg, #101c22, #1a2a31);
 }
-.college-home .donor-marquee,
+.school-home .donor-marquee,
 .donor-marquee {
   background: #0c161b;
   border-color: #3c5158;
   color: #e7e1d2;
 }
-.college-home .marquee-label,
-.college-home .marquee-track b,
+.school-home .marquee-label,
+.school-home .marquee-track b,
 .marquee-label,
 .marquee-track b {
   color: #e6b64d;
@@ -45,16 +45,16 @@ body,
   color: #f4f0e6;
 }
 .template-header nav a.active,
-.college-home .accent,
-.college-home .cards span {
+.school-home .accent,
+.school-home .cards span {
   color: #e6b64d;
 }
-.college-home .button,
+.school-home .button,
 .button {
   background: #e6b64d;
   color: #101c22;
 }
-.college-home .button:hover,
+.school-home .button:hover,
 .button:hover {
   background: #f3cc73;
 }
@@ -99,7 +99,7 @@ body,
 .gallery-grid img {
   box-shadow: 0 10px 20px #0006;
 }
-.college-home footer,
+.school-home footer,
 footer {
   background: #0c161b;
   border-color: #3c5158;

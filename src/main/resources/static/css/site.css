@@ -180,8 +180,8 @@ main {
   background: linear-gradient(130deg, #eff6f6, #fbfaf4);
 }
 .page-hero {
-  padding: 115px 0;
-  max-width: 760px;
+  padding: 40px 0;
+  max-width: 1120px;
 }
 .page-hero > p:not(.eyebrow) {
   font-size: 1.35rem;

@@ -9,21 +9,21 @@ html {
   background: #071118;
 }
 body,
-.college-home {
+.school-home {
   min-height: 100vh;
   background:
     radial-gradient(circle at 75% 0, #173d4b 0, transparent 34%),
     radial-gradient(circle at 0 55%, #182d53 0, transparent 38%), #071118;
   color: #edf7fb;
 }
-.college-home .donor-marquee,
+.school-home .donor-marquee,
 .donor-marquee {
   background: linear-gradient(90deg, #061016, #0f2e3b, #061016);
   color: #dceced;
   border-bottom: 1px solid #285664;
 }
-.college-home .marquee-label,
-.college-home .marquee-track b,
+.school-home .marquee-label,
+.school-home .marquee-track b,
 .marquee-label,
 .marquee-track b {
   color: #70d6c7;
@@ -72,17 +72,17 @@ body,
 .hero-copy > p:not(.eyebrow) {
   color: #bdd5dc;
 }
-.college-home .accent {
+.school-home .accent {
   color: #70d6c7;
 }
-.college-home .button,
+.school-home .button,
 .button {
   background: #70d6c7;
   color: #071118;
   border-color: #70d6c7;
   box-shadow: 0 10px 24px #0008;
 }
-.college-home .button:hover,
+.school-home .button:hover,
 .button:hover {
   background: #a6eee4;
   border-color: #a6eee4;
@@ -166,7 +166,7 @@ body,
   border-color: #4d98a2;
   box-shadow: 10px 10px 0 #071118;
 }
-.college-home footer,
+.school-home footer,
 footer {
   background: #050d12;
   border-top: 1px solid #294b56;

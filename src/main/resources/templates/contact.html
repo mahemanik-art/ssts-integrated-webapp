@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact us | Sandy Springs Tamil School</title>
+  <link rel="stylesheet" th:href="@{/css/site.css}" />
+  <link rel="stylesheet" th:href="@{/css/theme.css}" />
+  <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+  <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+  <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+  <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+  <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+  <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+  <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+  <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+  <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+  <style>
+    /* site.css sets .page-hero to padding: 115px 0, leaving a large gap under the
+       header. Tighten it here (about/team already override it similarly). */
+    .page-hero {
+      padding: 40px 0;
+    }
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 30px;
+      padding-bottom: 0;
+    }
+
+    .contact-info-card {
+      background: #294550;
+      border: 1px solid #46616d;
+      border-radius: 14px;
+      padding: 26px 28px;
+      box-shadow: 0 6px 18px #07121866;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .contact-info-card h3 {
+      color: #f2b94b;
+      margin: 0;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .contact-info-card p,
+    .contact-info-card a {
+      margin: 0;
+      color: #d9e8e7;
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
+
+    .contact-info-card a {
+      color: #f9d077;
+    }
+
+    .contact-info-card a:hover {
+      color: #f7c766;
+    }
+
+    .contact-info-card .map-embed {
+      margin-top: 8px;
+      border: 1px solid #46616d;
+      border-radius: 10px;
+      overflow: hidden;
+      height: 230px;
+    }
+
+    .contact-info-card iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+    }
+
+    .contact-form-card {
+      background: #294550;
+      border: 1px solid #46616d;
+      border-radius: 14px;
+      padding: 26px 28px;
+      box-shadow: 0 6px 18px #07121866;
+    }
+
+    .contact-form-card h3 {
+      color: #f2b94b;
+      margin: 0 0 18px;
+      font-size: 1.05rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contact-form .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .contact-form label {
+      font-weight: 600;
+      color: #d9e8e7;
+      font-size: 0.92rem;
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid #46616d;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-family: "Source Sans 3", sans-serif;
+      background: #1e343e;
+      color: #edf4f4;
+    }
+
+    .contact-form textarea {
+      min-height: 130px;
+      resize: vertical;
+    }
+
+    .contact-form .button {
+      align-self: flex-start;
+      margin-top: 4px;
+    }
+
+    .form-note {
+      font-size: 0.88rem;
+      color: #9aaeb6;
+    }
+
+    .form-success {
+      background: #1f4234;
+      border: 1px solid #3f7a5c;
+      color: #bfe8cf;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+    }
+
+    .form-error {
+      background: #47232a;
+      border: 1px solid #7a3f4a;
+      color: #f3c2c2;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 800px) {
+      .contact-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body class="school-home">
+  <section class="donor-marquee" aria-label="">
+    <div class="marquee-track"></div>
+  </section>
+  <header class="template-header wrap">
+    <a href="/" class="header-logo"><img src="/images/ssts-logo.png" alt="Sandy Springs Tamil School logo" /></a>
+    <nav aria-label="Main navigation">
+      <a href="/">Home</a><a href="/about">About</a><a href="/calendar">Calendar</a><a href="/team">Our Team</a><a
+        href="/contact" class="active">Contact</a>
+    </nav>
+  </header>
+  <main class="inner">
+    <section class="wrap page-hero">
+      <p class="eyebrow accent">Contact us</p>
+      <h1>We would love to hear from you.</h1>
+      <p>Reach us during school hours, send an email, or use the form below — we usually respond within a couple of
+        days.</p>
+    </section>
+
+    <section class="wrap contact-layout">
+      <article class="contact-info-card">
+        <div>
+          <h3>Sandy Springs Tamil School</h3>
+          <p>4896 N Peachtree Rd,<br />Dunwoody, GA 30338, USA.</p>
+        </div>
+        <div>
+          <h3>Email</h3>
+          <p><a href="mailto:contact@sstamilschool.org">contact@sstamilschool.org</a></p>
+        </div>
+        <div>
+          <h3>School Hours</h3>
+          <p>Friday : 7:00 PM – 8:15 PM</p>
+        </div>
+        <div class="map-embed">
+          <iframe title="Map to Sandy Springs Tamil School"
+            src="https://www.google.com/maps?q=4896%20N%20Peachtree%20Rd,%20Dunwoody,%20GA%2030338&output=embed"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+        </div>
+      </article>
+
+      <article class="contact-form-card">
+        <h3>Contact Us</h3>
+        <div th:if="${sent}" class="form-success" role="status">
+          Thank you! Your message has been sent to contact@sstamilschool.org. We'll get back to you soon.
+        </div>
+        <div th:if="${error}" class="form-error" role="alert">
+          Sorry, we couldn't send your message. Please try again or email us directly at
+          <a href="mailto:contact@sstamilschool.org">contact@sstamilschool.org</a>.
+        </div>
+        <form class="contact-form" th:action="@{/contact}" method="post">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required placeholder="Your name" />
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="you@example.com" />
+          </div>
+          <div class="form-group">
+            <label for="subject">Subject</label>
+            <input type="text" id="subject" name="subject" placeholder="What is this about?" />
+          </div>
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required placeholder="Write your message here..."></textarea>
+          </div>
+          <p class="form-note">Submitting this form sends an email to contact@sstamilschool.org.</p>
+          <button type="submit" class="button">Submit</button>
+        </form>
+      </article>
+    </section>
+  </main>
+  <footer>
+    <div class="wrap">
+      <strong>Sandy Springs Tamil School</strong><span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings,
+        7:00–8:15 PM</span>
+    </div>
+  </footer>
+</body>
+
+</html>

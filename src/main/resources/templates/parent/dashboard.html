@@ -1,89 +1,89 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Parent Dashboard | SSTS</title>
-  <link rel="stylesheet" th:href="@{/css/site.css}" />
-  <link rel="stylesheet" th:href="@{/css/theme.css}" />
-  <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
-  <link rel="stylesheet" th:href="@{/css/school-template.css}" />
-  <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
-  <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
-  <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
-  <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
-  <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
-  <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
-  <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
-  <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
-  <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
-  <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
-  <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
-  <link rel="stylesheet" th:href="@{/css/levels.css}" />
-  <link rel="stylesheet" th:href="@{/css/donors.css}" />
-</head>
-  <body class="college-home">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Parent Dashboard | SSTS</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+    <link rel="stylesheet" th:href="@{/css/levels.css}" />
+    <link rel="stylesheet" th:href="@{/css/donors.css}" />
+  </head>
+  <body class="school-home">
     <section class="donor-marquee" aria-label="">
       <div class="marquee-track"></div>
     </section>
     <header class="template-header wrap">
-    <a href="/" class="header-logo">
-      <img th:src="@{/images/ssts-logo.png}" alt="Sandy Springs Tamil School logo" />
-    </a>
-    <nav aria-label="Main navigation">
-      <a href="/">Home</a>
-      <a href="/about">About</a>
-      <a href="/calendar">Calendar</a>
-      <a href="/team">Our Team</a>
-      <a href="/contact">Contact</a>
-      <a href="/dashboard">Dashboard</a>
-      <a href="/logout">Logout</a>
-    </nav>
-  </header>
+      <a href="/" class="header-logo">
+        <img th:src="@{/images/ssts-logo.png}" alt="Sandy Springs Tamil School logo" />
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+        <a href="/calendar">Calendar</a>
+        <a href="/team">Our Team</a>
+        <a href="/contact">Contact</a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/logout">Logout</a>
+      </nav>
+    </header>
 
-  <main>
-    <section class="template-hero wrap">
-      <div class="hero-heading">
-        <h1 th:text="'Welcome, ' + ${user.fullName}">Parent Dashboard</h1>
-        <p>Stay connected with your child's learning journey.</p>
-      </div>
-    </section>
+    <main>
+      <section class="template-hero wrap">
+        <div class="hero-heading">
+          <h1 th:text="'Welcome, ' + ${user.fullName}">Parent Dashboard</h1>
+          <p>Stay connected with your child's learning journey.</p>
+        </div>
+      </section>
 
-    <section class="intro-section wrap">
-      <div>
-        <p class="eyebrow accent">PARENT PORTAL</p>
-        <h2>Your child's progress</h2>
-      </div>
-      <div class="dashboard-grid">
-        <div class="dashboard-card">
-          <h3>Class Schedule</h3>
-          <p>View upcoming classes and events.</p>
-          <a href="/calendar" class="button">View Calendar</a>
+      <section class="intro-section wrap">
+        <div>
+          <p class="eyebrow accent">PARENT PORTAL</p>
+          <h2>Your child's progress</h2>
         </div>
-        <div class="dashboard-card">
-          <h3>Announcements</h3>
-          <p>Read the latest school news and updates.</p>
-          <a href="/announcements" class="button">View News</a>
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <h3>Class Schedule</h3>
+            <p>View upcoming classes and events.</p>
+            <a href="/calendar" class="button">View Calendar</a>
+          </div>
+          <div class="dashboard-card">
+            <h3>Announcements</h3>
+            <p>Read the latest school news and updates.</p>
+            <a href="/announcements" class="button">View News</a>
+          </div>
+          <div class="dashboard-card">
+            <h3>Volunteer</h3>
+            <p>Sign up for school events and volunteer opportunities.</p>
+            <a href="/volunteer" class="button">Volunteer</a>
+          </div>
+          <div class="dashboard-card">
+            <h3>Contact</h3>
+            <p>Reach out to teachers and coordinators.</p>
+            <a href="/contact" class="button">Contact Us</a>
+          </div>
         </div>
-        <div class="dashboard-card">
-          <h3>Volunteer</h3>
-          <p>Sign up for school events and volunteer opportunities.</p>
-          <a href="/volunteer" class="button">Volunteer</a>
-        </div>
-        <div class="dashboard-card">
-          <h3>Contact</h3>
-          <p>Reach out to teachers and coordinators.</p>
-          <a href="/contact" class="button">Contact Us</a>
-        </div>
-      </div>
-    </section>
-  </main>
+      </section>
+    </main>
 
-  <footer>
-    <div class="wrap">
-      <strong>Sandy Springs Tamil School</strong>
-      <span>1978 Mt. Vernon Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
-    </div>
-  </footer>
-</body>
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong>
+        <span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+  </body>
 </html>

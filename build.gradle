@@ -21,11 +21,38 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
     runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') { useJUnitPlatform() }
+
+// Make `./gradlew bootRun` work out of the box by loading the local env vars from
+// .vscode/launch.json (the single source of truth for dev credentials). Without this,
+// bootRun forks a JVM with no DB_* vars and the app dies with
+// "password authentication failed for user ${DB_USERNAME}".
+// launch.json is JSONC (has // comments), so strip them before strict JSON parsing.
+tasks.named('bootRun', JavaExec) {
+    doFirst {
+        def launchFile = file('.vscode/launch.json')
+        if (launchFile.exists()) {
+            try {
+                def text = launchFile.text.replaceAll(/(?m)^\s*\/\/.*$/, '')
+                def envMap = new groovy.json.JsonSlurper().parseText(text).configurations[0].env
+                if (envMap) {
+                    envMap.each { k, v -> environment k, v }
+                }
+            } catch (Exception e) {
+                logger.lifecycle("WARN: could not read env from .vscode/launch.json (${e.message}); " +
+                                 "bootRun will use ambient environment variables.")
+            }
+        }
+    }
+}
 
 task executeSchema(type: Exec) {
     description 'Execute SQL schema file against PostgreSQL'

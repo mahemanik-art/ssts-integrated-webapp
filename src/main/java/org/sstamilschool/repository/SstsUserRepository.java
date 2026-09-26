@@ -22,6 +22,12 @@ public interface SstsUserRepository extends JpaRepository<SstsUser, Long> {
     List<SstsUser> findByUserType(String userType);
     long countByUserType(String userType);
 
+    @Query("SELECT u FROM SstsUser u LEFT JOIN FETCH u.profile WHERE u.userType IN ('staff', 'volunteer') AND u.isActive = true ORDER BY u.joiningDate ASC NULLS LAST, u.fullName ASC")
+    List<SstsUser> findPublicTeamMembers();
+
+    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
+
     @Query("SELECT COUNT(s) FROM SstsUser s WHERE s.lastLogin > :since")
     long countActiveUsersSince(@Param("since") LocalDateTime since);
 

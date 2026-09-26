@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register | Sandy Springs Tamil School</title>
+  <link rel="stylesheet" th:href="@{/css/site.css}" />
+  <link rel="stylesheet" th:href="@{/css/theme.css}" />
+  <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+  <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+  <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+  <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+  <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+  <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+  <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+  <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+  <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+  <link rel="stylesheet" th:href="@{/css/levels.css}" />
+  <link rel="stylesheet" th:href="@{/css/donors.css}" />
+  <style>
+    .login-form {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .form-section {
+      border: 1px solid #2a4a55;
+      border-radius: 8px;
+      padding: 1rem 1.1rem;
+    }
+    .form-section legend {
+      color: #ffcf45;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .field-label {
+      display: block;
+      text-align: left;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.3rem;
+      font-size: 0.9rem;
+    }
+    .login-form input,
+    .login-form textarea,
+    .login-form select {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid #b9c5c8;
+      border-radius: 6px;
+      font-size: 0.92rem;
+      font-family: "Source Sans 3", sans-serif;
+      background: #0f2029;
+      color: #edf7fb;
+    }
+    .login-form textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .checkbox-row input {
+      width: auto;
+    }
+    .login-form .button {
+      align-self: flex-start;
+    }
+    .login-form .text-link {
+      color: #ffcf45;
+      text-decoration: underline;
+    }
+    .login-form .alert {
+      padding: 0.7rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    .alert-error {
+      background: rgba(213, 66, 45, 0.15);
+      color: #f3a833;
+      border: 1px solid #f3a833;
+    }
+  </style>
+</head>
+<body class="school-home">
+  <section class="donor-marquee" aria-label="">
+    <div class="marquee-track"></div>
+  </section>
+
+  <header class="template-header wrap">
+    <a href="/" class="header-logo">
+      <img th:src="@{/images/ssts-logo.png}" alt="Sandy Springs Tamil School logo" />
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/calendar">Calendar</a>
+      <a href="/team">Our Team</a>
+      <a href="/contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro-section wrap">
+      <div>
+        <p class="eyebrow accent">CREATE YOUR ACCOUNT</p>
+        <h2>Join the SSTS community</h2>
+      </div>
+      <div>
+        <form th:action="@{/register}" method="post" class="login-form">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+          <fieldset class="form-section">
+            <legend>Account</legend>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fullName" class="field-label">Full name</label>
+                <input type="text" id="fullName" name="fullName" required tabindex="1" />
+              </div>
+              <div class="form-group">
+                <label for="username" class="field-label">Username</label>
+                <input type="text" id="username" name="username" required tabindex="2" />
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="email" class="field-label">Email</label>
+                <input type="email" id="email" name="email" required tabindex="3" />
+              </div>
+              <div class="form-group">
+                <label for="password" class="field-label">Password</label>
+                <input type="password" id="password" name="password" required tabindex="4" />
+              </div>
+              <div class="form-group">
+                <label for="confirmPassword" class="field-label">Confirm password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required tabindex="5" />
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <div class="checkbox-row">
+                  <input type="checkbox" id="receiveNewsletter" name="receiveNewsletter" value="true" checked tabindex="6" />
+                  <label for="receiveNewsletter" class="field-label" style="margin-bottom:0; font-weight:400;">Subscribe to the newsletter</label>
+                </div>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <div class="checkbox-row">
+                  <input type="checkbox" id="receiveVolunteerUpdates" name="receiveVolunteerUpdates" value="true" checked tabindex="7" />
+                  <label for="receiveVolunteerUpdates" class="field-label" style="margin-bottom:0; font-weight:400;">Receive volunteer updates</label>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>Contact</legend>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone" class="field-label">Phone</label>
+                <input type="tel" id="phone" name="phone" tabindex="8" />
+              </div>
+              <div class="form-group">
+                <label for="alternateEmail" class="field-label">Alternate email</label>
+                <input type="email" id="alternateEmail" name="alternateEmail" tabindex="9" />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>Address</legend>
+            <div class="form-row">
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="addressLine1" class="field-label">Address line 1</label>
+                <input type="text" id="addressLine1" name="addressLine1" tabindex="10" />
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="addressLine2" class="field-label">Address line 2</label>
+                <input type="text" id="addressLine2" name="addressLine2" tabindex="11" />
+              </div>
+              <div class="form-group">
+                <label for="city" class="field-label">City</label>
+                <input type="text" id="city" name="city" tabindex="12" />
+              </div>
+              <div class="form-group">
+                <label for="state" class="field-label">State</label>
+                <input type="text" id="state" name="state" tabindex="13" />
+              </div>
+              <div class="form-group">
+                <label for="zipCode" class="field-label">ZIP / Postal code</label>
+                <input type="text" id="zipCode" name="zipCode" tabindex="14" />
+              </div>
+              <div class="form-group">
+                <label for="country" class="field-label">Country</label>
+                <input type="text" id="country" name="country" value="USA" tabindex="15" />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>About</legend>
+            <div class="form-row">
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="bio" class="field-label">Bio</label>
+                <textarea id="bio" name="bio" tabindex="16" rows="3"></textarea>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>Professional</legend>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="occupation" class="field-label">Occupation</label>
+                <input type="text" id="occupation" name="occupation" tabindex="17" />
+              </div>
+              <div class="form-group">
+                <label for="employer" class="field-label">Employer</label>
+                <input type="text" id="employer" name="employer" tabindex="18" />
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="yearsInCommunity" class="field-label">Years in community</label>
+                <input type="number" id="yearsInCommunity" name="yearsInCommunity" min="0" value="0" tabindex="19" />
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-section">
+            <legend>Experience</legend>
+            <div class="form-row">
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="priorEducation" class="field-label">Prior education</label>
+                <textarea id="priorEducation" name="priorEducation" tabindex="20" rows="2"></textarea>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="priorTamilExperience" class="field-label">Prior Tamil experience</label>
+                <textarea id="priorTamilExperience" name="priorTamilExperience" tabindex="21" rows="2"></textarea>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="priorTeachingExperience" class="field-label">Prior teaching experience</label>
+                <textarea id="priorTeachingExperience" name="priorTeachingExperience" tabindex="22" rows="2"></textarea>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="priorVolunteerExperience" class="field-label">Prior volunteer experience</label>
+                <textarea id="priorVolunteerExperience" name="priorVolunteerExperience" tabindex="23" rows="2"></textarea>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="certifications" class="field-label">Certifications</label>
+                <textarea id="certifications" name="certifications" tabindex="24" rows="2"></textarea>
+              </div>
+              <div class="form-group" style="grid-column: 1 / -1;">
+                <label for="interests" class="field-label">Interests</label>
+                <textarea id="interests" name="interests" tabindex="25" rows="2"></textarea>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="form-actions" style="display:flex; align-items:center; justify-content:space-between; margin-top: 0.6rem;">
+            <button type="submit" class="button" style="align-self:center;" tabindex="26">Register</button>
+            <a th:href="@{/login}" class="text-link" tabindex="27">Already have an account?</a>
+          </div>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <strong>Sandy Springs Tamil School</strong>
+      <span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+    </div>
+  </footer>
+</body>
+</html>

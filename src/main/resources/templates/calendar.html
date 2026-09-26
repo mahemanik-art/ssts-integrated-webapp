@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title th:text="${page.title} + ' | Sandy Springs Tamil School'">SSTS</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+  </head>
+  <body class="school-home">
+    <section class="donor-marquee" aria-label="">
+      <div class="marquee-track"></div>
+    </section>
+    <header class="template-header wrap">
+      <a href="/" class="header-logo"><img src="/images/ssts-logo.png" alt="Sandy Springs Tamil School logo" /></a>
+      <nav aria-label="Main navigation">
+        <a href="/">Home</a><a href="/about">About</a
+        ><a href="/calendar" class="active">Calendar</a
+        ><a href="/team">Our Team</a
+        ><a href="/contact">Contact</a>
+      </nav>
+    </header>
+    <main class="inner">
+      <section class="wrap page-hero">
+        <p class="eyebrow accent" th:text="${page.title}">School calendar</p>
+        <h1 th:text="${page.intro}">Learn, celebrate, and grow together.</h1>
+        <p th:text="${page.body}">Body</p>
+      </section>
+
+      <section class="wrap calendar-block">
+        <h2 th:if="${calendar != null and !calendar.months.isEmpty()}"
+            th:text="'Academic Year ' + ${calendar.yearLabel}">Academic Year</h2>
+
+        <div class="calendar-grid" th:if="${calendar != null and !calendar.months.isEmpty()}">
+          <article th:each="month : ${calendar.months}">
+            <h3 th:text="${month.label}">August 2026</h3>
+            <ul>
+              <li th:each="item : ${month.items}">
+                <span class="cal-icon"
+                      th:classappend="${item.type == 'holiday'} ? 'holiday' : 'working'"
+                      aria-hidden="true"></span>
+                <span><b th:text="${item.dayLabel}">7th</b> — <span th:text="${item.title}">Event</span></span>
+              </li>
+            </ul>
+          </article>
+        </div>
+
+        <p class="calendar-empty" th:if="${calendar == null or calendar.months.isEmpty()}">
+          The calendar for the <span th:text="${calendar != null ? calendar.yearLabel : 'current'}"></span>
+          academic year is being finalized. Please check back soon!
+        </p>
+      </section>
+
+      <section class="wrap calendar-block" th:if="${calendar != null and !calendar.months.isEmpty()}">
+        <h2>Schedule Summary</h2>
+        <div class="calendar-grid">
+          <article>
+            <h3>Overview</h3>
+            <ul>
+              <li><span class="cal-icon working" aria-hidden="true"></span>
+                <span><b>Scheduled events</b> — <span th:text="${calendar.totalEvents}">0</span> entries this academic year</span></li>
+            </ul>
+          </article>
+          <article th:if="${!calendar.keyEvents.isEmpty()}">
+            <h3>Key Events</h3>
+            <ul>
+              <li th:each="event : ${calendar.keyEvents}">
+                <span class="cal-icon working" aria-hidden="true"></span>
+                <span><b th:text="${event.title}">Event</b> — <span th:text="${event.date}">date</span></span>
+              </li>
+            </ul>
+          </article>
+          <article th:if="${!calendar.holidays.isEmpty()}">
+            <h3>School Holidays</h3>
+            <ul>
+              <li th:each="holiday : ${calendar.holidays}">
+                <span class="cal-icon holiday" aria-hidden="true"></span>
+                <span th:text="${holiday}">Holiday</span>
+              </li>
+            </ul>
+          </article>
+          <article th:if="${!calendar.testDates.isEmpty()}">
+            <h3>Test Dates</h3>
+            <ul>
+              <li th:each="test : ${calendar.testDates}">
+                <span class="cal-icon working" aria-hidden="true"></span>
+                <span th:text="${test}">Test</span>
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong
+        ><span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+  </body>
+</html>

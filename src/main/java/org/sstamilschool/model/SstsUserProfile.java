@@ -120,6 +120,24 @@ public class SstsUserProfile {
     public String getAvatarUrl() { return avatarUrl; }
     public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
 
+    @Column(length = 100)
+    private String occupation;
+
+    @Column(length = 100)
+    private String employer;
+
+    @Column
+    private Integer yearsInCommunity = 0;
+
+    public String getOccupation() { return occupation; }
+    public void setOccupation(String occupation) { this.occupation = occupation; }
+
+    public String getEmployer() { return employer; }
+    public void setEmployer(String employer) { this.employer = employer; }
+
+    public Integer getYearsInCommunity() { return yearsInCommunity; }
+    public void setYearsInCommunity(Integer yearsInCommunity) { this.yearsInCommunity = yearsInCommunity; }
+
     public String getPriorEducation() { return priorEducation; }
     public void setPriorEducation(String priorEducation) { this.priorEducation = priorEducation; }
 

@@ -150,6 +150,34 @@ CREATE TABLE IF NOT EXISTS ssts_login_attempts (
     attempted_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Password reset tokens table
+CREATE TABLE IF NOT EXISTS ssts_password_reset_tokens (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(100) NOT NULL,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+    used BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Students table (enrollment records, independent of login accounts)
+CREATE TABLE IF NOT EXISTS ssts_students (
+    id SERIAL PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100),
+    date_of_birth DATE,
+    grade VARCHAR(20),
+    class_level VARCHAR(50),
+    gender VARCHAR(20) CHECK (gender IN ('male', 'female', 'other', 'prefer_not_to_say')),
+    enrollment_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    parent_name VARCHAR(100),
+    parent_phone VARCHAR(20),
+    parent_email VARCHAR(100),
+    parent_relationship VARCHAR(50),
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Indexes
 CREATE INDEX IF NOT EXISTS idx_ssts_users_email ON ssts_users(email);
 CREATE INDEX IF NOT EXISTS idx_ssts_users_role ON ssts_users(role_id);
@@ -162,3 +190,50 @@ CREATE INDEX IF NOT EXISTS idx_ssts_sessions_user ON ssts_user_sessions(user_id)
 CREATE INDEX IF NOT EXISTS idx_ssts_sessions_token ON ssts_user_sessions(session_token);
 CREATE INDEX IF NOT EXISTS idx_ssts_login_attempts_email ON ssts_login_attempts(email);
 CREATE INDEX IF NOT EXISTS idx_ssts_login_attempts_time ON ssts_login_attempts(attempted_at);
+CREATE INDEX IF NOT EXISTS idx_ssts_reset_tokens_token ON ssts_password_reset_tokens(token);
+
+
+-- Calendar events table (school calendar; sourced by /calendar page)
+CREATE TABLE IF NOT EXISTS ssts_calendar_events (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    event_date DATE NOT NULL,
+    end_date DATE,
+    -- working = class/session day, holiday = no school
+    event_type VARCHAR(20) NOT NULL DEFAULT 'working' CHECK (event_type IN ('working', 'holiday')),
+    -- Academic year this event belongs to, e.g. '2026-2027' (Aug-Jul cycle).
+    -- Format is enforced so equality/string-ordering is safe; the value is always
+    -- produced by util/AcademicYear.of() (never free-typed), and this CHECK is
+    -- defense-in-depth against bad manual inserts.
+    academic_year VARCHAR(9) NOT NULL
+        CONSTRAINT chk_ssts_calendar_events_academic_year CHECK (academic_year ~ '^[0-9]{4}-[0-9]{4}$'),
+    description VARCHAR(500),
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- The live table may have been created by Hibernate (ddl-auto=update) without the
+-- column defaults declared above. Bring it in line so inserts can omit those columns.
+ALTER TABLE ssts_calendar_events ALTER COLUMN is_active  SET DEFAULT true;
+ALTER TABLE ssts_calendar_events ALTER COLUMN created_at SET DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE ssts_calendar_events ALTER COLUMN updated_at SET DEFAULT CURRENT_TIMESTAMP;
+
+-- Backfill the CHECK onto databases created before it existed (idempotent).
+-- If this fails, some existing rows are malformed; find them with:
+--   SELECT id, academic_year FROM ssts_calendar_events WHERE academic_year !~ '^[0-9]{4}-[0-9]{4}$';
+DO $$
+BEGIN
+    IF NOT EXISTS (
+        SELECT 1 FROM pg_constraint WHERE conname = 'chk_ssts_calendar_events_academic_year'
+    ) THEN
+        ALTER TABLE ssts_calendar_events
+            ADD CONSTRAINT chk_ssts_calendar_events_academic_year
+            CHECK (academic_year ~ '^[0-9]{4}-[0-9]{4}$');
+    END IF;
+END $$;
+
+CREATE INDEX IF NOT EXISTS idx_ssts_calendar_events_year ON ssts_calendar_events(academic_year);
+CREATE INDEX IF NOT EXISTS idx_ssts_calendar_events_date ON ssts_calendar_events(event_date);
+
+CREATE INDEX IF NOT EXISTS idx_ssts_reset_tokens_email ON ssts_password_reset_tokens(email);

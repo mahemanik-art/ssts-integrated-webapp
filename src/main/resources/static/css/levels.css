@@ -58,15 +58,16 @@
   margin-bottom: 4px;
 }
 .level-card h3 {
+  grid-column: 1 / -1;
   margin: 0;
   font-size: 1.3rem;
   line-height: 1.2;
   color: #f0f9fb;
-  align-self: baseline;
 }
 .level-card .level-age {
+  grid-column: 1 / -1;
   display: inline-block;
-  align-self: baseline;
+  align-self: start;
   font-size: 0.9rem;
   font-weight: 700;
   color: #ffcf45;
@@ -114,7 +115,7 @@
   margin-top: 26px;
 }
 .intro-section {
-  padding-top: clamp(44px, 6vh, 72px);
+  padding-top: clamp(44px, 6vh, 42px);
   padding-bottom: clamp(44px, 6vh, 72px);
   gap: clamp(36px, 4vw, 64px);
 }

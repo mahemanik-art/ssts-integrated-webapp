@@ -182,3 +182,59 @@ INSERT INTO ssts_users (username, email, password_hash, full_name, role_id, user
 INSERT INTO ssts_users (username, email, password_hash, full_name, role_id, user_type, designation, is_active, email_verified, receive_newsletter, receive_volunteer_updates, created_at, updated_at) VALUES
     ('parent1', 'parent1@sstamschool.org', '$2a$10$REPLACE_WITH_ACTUAL_BCRYPT_HASH', 'Parent One', (SELECT id FROM ssts_roles WHERE name = 'read_only'), 'parent', NULL, true, false, true, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('parent2', 'parent2@sstamschool.org', '$2a$10$REPLACE_WITH_ACTUAL_BCRYPT_HASH', 'Parent Two', (SELECT id FROM ssts_roles WHERE name = 'read_only'), 'parent', NULL, true, false, true, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- ============================================================================
+-- BEGIN calendar seed (2026-2027) -- sourced from the MTS academic calendar page
+-- (https://mariettatamilschool.com/mts-academic-calendar/). Loaded into
+-- ssts_calendar_events to back the /calendar page. Idempotent: re-running
+-- replaces this academic year's events. is_active is set explicitly (the live
+-- Hibernate-created table has no column default). academic_year = Aug-Jul cycle.
+-- ============================================================================
+DELETE FROM ssts_calendar_events WHERE academic_year = '2026-2027';
+
+-- Working days: classes, tests, terms, celebrations
+INSERT INTO ssts_calendar_events (title, event_date, end_date, event_type, academic_year, description, is_active) VALUES
+    ('First Term Begins',                   '2026-08-07', NULL, 'working', '2026-2027', 'Class 1', true),
+    ('Class 2',                             '2026-08-21', NULL, 'working', '2026-2027', NULL, true),
+    ('Class 3',                             '2026-08-28', NULL, 'working', '2026-2027', NULL, true),
+    ('Test 1: Project',                     '2026-09-04', NULL, 'working', '2026-2027', 'Class 4', true),
+    ('Class 5',                             '2026-09-11', NULL, 'working', '2026-2027', NULL, true),
+    ('Class 6',                             '2026-09-18', NULL, 'working', '2026-2027', NULL, true),
+    ('PT Conference Month',                 '2026-10-02', NULL, 'working', '2026-2027', 'Class 7', true),
+    ('Test 2: Cover Classes 1-7',           '2026-10-09', NULL, 'working', '2026-2027', 'Class 8', true),
+    ('Class 9',                             '2026-10-16', NULL, 'working', '2026-2027', NULL, true),
+    ('Class 10',                            '2026-10-23', NULL, 'working', '2026-2027', NULL, true),
+    ('Class 11',                            '2026-10-30', NULL, 'working', '2026-2027', NULL, true),
+    ('Test 3: Term I Ends',                 '2026-11-06', NULL, 'working', '2026-2027', 'Covers Classes 8-11, Report Due', true),
+    ('Second Term Begins',                  '2026-11-13', NULL, 'working', '2026-2027', 'Class 13', true),
+    ('Class 14',                            '2026-11-20', NULL, 'working', '2026-2027', NULL, true),
+    ('Class 15',                            '2026-12-04', NULL, 'working', '2026-2027', NULL, true),
+    ('Test 4: Project',                     '2026-12-11', NULL, 'working', '2026-2027', 'Class 16', true),
+    ('Class 17',                            '2026-12-18', NULL, 'working', '2026-2027', NULL, true),
+    ('Class 18',                            '2027-01-08', NULL, 'working', '2026-2027', NULL, true),
+    ('Virtual Learning',                    '2027-01-22', NULL, 'working', '2026-2027', 'Class 19', true),
+    ('Test 5: Term II Ends',                '2027-01-29', NULL, 'working', '2026-2027', 'Covers Classes 13-19, Report Due', true),
+    ('Pongal Day Celebration',              '2027-01-30', NULL, 'working', '2026-2027', NULL, true),
+    ('Third Term Begins',                   '2027-02-05', NULL, 'working', '2026-2027', 'Class 21', true),
+    ('Class 22',                            '2027-02-12', NULL, 'working', '2026-2027', NULL, true),
+    ('Class 23',                            '2027-02-26', NULL, 'working', '2026-2027', NULL, true),
+    ('Test 6: Cover Classes 20-23',         '2027-03-05', NULL, 'working', '2026-2027', 'Class 24', true),
+    ('Class 25',                            '2027-03-12', NULL, 'working', '2026-2027', NULL, true),
+    ('Class 26',                            '2027-03-19', NULL, 'working', '2026-2027', NULL, true),
+    ('Class 27',                            '2027-03-26', NULL, 'working', '2026-2027', NULL, true),
+    ('Test 7: Cover Classes 24-27',         '2027-04-02', NULL, 'working', '2026-2027', 'Class 28', true),
+    ('Class 29',                            '2027-04-16', NULL, 'working', '2026-2027', NULL, true),
+    ('Class 30',                            '2027-04-23', NULL, 'working', '2026-2027', NULL, true),
+    ('Annual Day Celebration',              '2027-04-24', NULL, 'working', '2026-2027', NULL, true),
+    ('Test 8: Final Exam - Term III Ends',   '2027-05-07', NULL, 'working', '2026-2027', 'All Portions, Final Report Due', true);
+
+-- Holidays / breaks (no class)
+INSERT INTO ssts_calendar_events (title, event_date, end_date, event_type, academic_year, description, is_active) VALUES
+    ('School Holiday',   '2026-08-14', NULL,          'holiday', '2026-2027', 'No Class', true),
+    ('Week Off',         '2026-09-21', '2026-09-25', 'holiday', '2026-2027', 'No Class', true),
+    ('Week Off',         '2026-11-23', '2026-11-27', 'holiday', '2026-2027', 'No Class', true),
+    ('Holiday Break',    '2026-12-21', '2027-01-01', 'holiday', '2026-2027', 'No Class', true),
+    ('Pongal Holiday',   '2027-01-15', NULL,          'holiday', '2026-2027', 'No Class', true),
+    ('Winter Break',     '2027-02-15', '2027-02-19', 'holiday', '2026-2027', 'No Class', true),
+    ('Spring Break',     '2027-04-05', '2027-04-09', 'holiday', '2026-2027', 'No Class', true);
+-- END calendar seed

@@ -7,19 +7,19 @@
   --paper: #fff6e6;
 }
 body,
-.college-home {
+.school-home {
   background: #fff6e6;
   color: #27120d;
   font-family: "Source Sans 3", sans-serif;
 }
-.college-home .donor-marquee,
+.school-home .donor-marquee,
 .donor-marquee {
   background: #27120d;
   color: #fff6e6;
   border: 0;
 }
-.college-home .marquee-label,
-.college-home .marquee-track b,
+.school-home .marquee-label,
+.school-home .marquee-track b,
 .marquee-label,
 .marquee-track b {
   color: #f3a833;
@@ -76,12 +76,12 @@ body,
   font-size: 1.25rem;
   max-width: 440px;
 }
-.college-home .accent {
+.school-home .accent {
   font-family: "DM Mono", monospace;
   color: #d5422d;
   letter-spacing: 0.12em;
 }
-.college-home .button,
+.school-home .button,
 .button {
   background: #d5422d;
   color: #fff6e6;
@@ -93,7 +93,7 @@ body,
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-.college-home .button:hover,
+.school-home .button:hover,
 .button:hover {
   background: #f3a833;
   border-color: #f3a833;
@@ -172,7 +172,7 @@ body,
   border-radius: 50% 50% 10px 10px;
   box-shadow: 8px 8px 0 #f3a833;
 }
-.college-home footer,
+.school-home footer,
 footer {
   background: #27120d;
   border: 0;

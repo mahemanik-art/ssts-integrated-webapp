@@ -3,6 +3,7 @@ package org.sstamilschool.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,9 +30,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authz -> authz
-                .requestMatchers("/", "/login", "/css/**", "/images/**", "/error").permitAll()
+                .requestMatchers("/", "/login", "/register", "/forgot-password", "/reset-password", "/css/**", "/images/**", "/error").permitAll()
                 .requestMatchers("/about", "/team", "/calendar", "/contact").permitAll()
                 .requestMatchers("/actuator/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                .requestMatchers(HttpMethod.PATCH, "/api/team/**", "/api/calendar/**")
+                    .hasAnyRole("ADMIN", "SUPER_ADMIN")
                 .anyRequest().authenticated()
             )
             .userDetailsService(userDetailsService)

@@ -39,7 +39,7 @@ public class SstsUser implements UserDetails, Serializable {
 
     @OneToOne(fetch = FetchType.LAZY, cascade = jakarta.persistence.CascadeType.ALL)
     @JoinColumn(name = "profile_id")
-    private transient SstsUserProfile profile;
+    private SstsUserProfile profile;
 
     @Column(length = 100)
     private String designation;

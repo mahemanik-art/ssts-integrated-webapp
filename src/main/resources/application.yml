@@ -1,0 +1,55 @@
+# Base configuration shared by all profiles (dev, stage, prod).
+# Profile-specific overrides live in application-<profile>.yml.
+# All secrets come from environment variables; nothing sensitive is committed here.
+# The active profile defaults to "dev" for local runs; Render/production should set
+# SPRING_PROFILES_ACTIVE=prod.
+
+spring:
+  application:
+    name: ssts-integrated-webapp
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+  # PostgreSQL. Host/port/db default to localhost; username/password have NO default
+  # on purpose, so the app fails fast instead of connecting with a committed credential.
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:ssts_pr}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # SMTP. Defaults are local; stage/prod should set MAIL_HOST/PORT/USERNAME/PASSWORD.
+  mail:
+    host: ${MAIL_HOST:localhost}
+    port: ${MAIL_PORT:25}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: ${MAIL_SMTP_AUTH:true}
+          starttls:
+            enable: ${MAIL_STARTTLS:true}
+            required: ${MAIL_STARTTLS_REQUIRED:true}
+
+server:
+  port: ${PORT:8081}
+
+app:
+  # Base URL used to build password-reset links in emails. Set APP_BASE_URL in stage/prod.
+  base-url: ${APP_BASE_URL:http://localhost:8081}
+  cache:
+    # Team page cache lifetime in hours. Force a refresh sooner with PATCH /api/team/cache
+    team-ttl-hours: ${TEAM_CACHE_TTL_HOURS:24}
+    calendar-ttl-hours: ${CALENDAR_CACHE_TTL_HOURS:24}
+  password-reset:
+    # Password reset token lifetime in seconds (1 hour)
+    token-expiry-seconds: ${PASSWORD_RESET_TOKEN_EXPIRY_SECONDS:3600}
+  mail:
+    enabled: ${APP_MAIL_ENABLED:true}
+    from: ${APP_MAIL_FROM:support@sstschool.org}

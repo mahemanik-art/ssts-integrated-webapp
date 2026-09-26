@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Our team | Sandy Springs Tamil School</title>
+  <link rel="stylesheet" th:href="@{/css/site.css}" />
+  <link rel="stylesheet" th:href="@{/css/theme.css}" />
+  <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+  <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+  <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+  <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+  <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+  <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+  <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+  <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+  <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+  <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+  <style>
+    /* site.css sets .page-hero to padding: 115px 0, which leaves a large gap under
+       the header. Tighten it here (about/contact already override it similarly). */
+    .page-hero {
+      padding: 40px 0;
+    }
+
+    .team-block {
+      padding-bottom: 50px;
+    }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 22px;
+    }
+
+    .team-card {
+      background: #294550;
+      border: 1px solid #46616d;
+      border-radius: 14px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 6px 18px #07121866;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .team-photo {
+      width: 96px;
+      height: 96px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 3px solid #f2b94b;
+      background: #1e343e;
+    }
+
+    .team-photo-fallback {
+      width: 96px;
+      height: 96px;
+      border-radius: 10px;
+      border: 3px solid #f2b94b;
+      background: #1e343e;
+      color: #f2b94b;
+      font-size: 2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: "Source Sans 3", sans-serif;
+    }
+
+    .team-card h3 {
+      color: #f7c766;
+      margin: 4px 0 0;
+      font-size: 1.05rem;
+    }
+
+    .team-card .team-designation {
+      color: #f2b94b;
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin: 0;
+    }
+
+    .team-card .team-bio {
+      color: #d9e8e7;
+      font-size: 0.92rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .team-empty {
+      color: #9aaeb6;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+
+<body class="school-home">
+  <section class="donor-marquee" aria-label="">
+    <div class="marquee-track"></div>
+  </section>
+  <header class="template-header wrap">
+    <a href="/" class="header-logo"><img src="/images/ssts-logo.png" alt="Sandy Springs Tamil School logo" /></a>
+    <nav aria-label="Main navigation">
+      <a href="/">Home</a><a href="/about">About</a><a href="/calendar">Calendar</a><a href="/team" class="active">Our
+        Team</a><a href="/contact">Contact</a>
+    </nav>
+  </header>
+  <main class="inner">
+    <section class="wrap page-hero">
+      <p class="eyebrow accent">Our team</p>
+      <h1>A community made possible by volunteers.</h1>
+      <p>Teachers, coordinators, and families work together to make every Friday evening meaningful for our learners.
+      </p>
+    </section>
+
+    <section class="wrap team-block">
+      <div class="team-grid" th:if="${#lists.size(teamMembers) > 0}">
+        <article class="team-card" th:each="member : ${teamMembers}">
+          <th:block
+            th:if="${member.profile != null and member.profile.avatarUrl != null and !member.profile.avatarUrl.isEmpty()}">
+            <img class="team-photo" th:src="@{${member.profile.avatarUrl}}" th:alt="${'Photo of ' + member.fullName}"
+              loading="lazy" />
+          </th:block>
+          <th:block
+            th:if="${member.profile == null or member.profile.avatarUrl == null or member.profile.avatarUrl.isEmpty()}">
+            <div class="team-photo-fallback" th:text="${#strings.substring(member.fullName, 0, 1)}">S</div>
+          </th:block>
+          <h3 th:text="${member.fullName}">Full Name</h3>
+          <p class="team-designation" th:if="${member.designation != null and !member.designation.isEmpty()}"
+            th:text="${member.designation}">Designation</p>
+          <p class="team-bio"
+            th:if="${member.profile != null and member.profile.bio != null and !member.profile.bio.isEmpty()}"
+            th:text="${member.profile.bio}">Bio</p>
+        </article>
+      </div>
+      <p class="team-empty" th:if="${#lists.size(teamMembers) == 0}">
+        Our team directory is being updated. Please check back soon!
+      </p>
+    </section>
+  </main>
+  <footer>
+    <div class="wrap">
+      <strong>Sandy Springs Tamil School</strong><span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings,
+        7:00–8:15 PM</span>
+    </div>
+  </footer>
+</body>
+
+</html>

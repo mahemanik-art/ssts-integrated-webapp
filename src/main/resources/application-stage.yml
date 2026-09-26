@@ -1,0 +1,15 @@
+# Staging profile. Set SPRING_PROFILES_ACTIVE=stage.
+# Staging mirrors production behavior (SQL logging off, template cache on) but keeps
+# ddl-auto=update so schema changes can be rehearsed against a real database.
+# Override DB_HOST/DB_NAME/APP_BASE_URL/MAIL_* for the staging services.
+
+spring:
+  thymeleaf:
+    cache: true
+  jpa:
+    hibernate:
+      ddl-auto: ${DB_DDL_AUTO:update}
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
