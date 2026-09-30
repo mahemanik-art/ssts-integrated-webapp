@@ -65,7 +65,7 @@ app:
     team-ttl-hours: ${TEAM_CACHE_TTL_HOURS:24}
     calendar-ttl-hours: ${CALENDAR_CACHE_TTL_HOURS:24}
     gallery-ttl-hours: ${GALLERY_CACHE_TTL_HOURS:24}
-      donors-ttl-hours: ${DONORS_CACHE_TTL_HOURS:24}
+    donors-ttl-hours: ${DONORS_CACHE_TTL_HOURS:24}
   password-reset:
     # Password reset token lifetime in seconds (1 hour)
     token-expiry-seconds: ${PASSWORD_RESET_TOKEN_EXPIRY_SECONDS:3600}
