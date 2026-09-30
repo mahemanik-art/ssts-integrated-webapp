@@ -21,8 +21,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import org.sstamilschool.controller.CacheAdminController;
 import org.sstamilschool.controller.PageController;
 import org.sstamilschool.dto.CalendarView;
+import org.sstamilschool.service.AnnouncementService;
 import org.sstamilschool.service.CalendarService;
+import org.sstamilschool.service.DonorService;
 import org.sstamilschool.service.EmailService;
+import org.sstamilschool.service.GalleryService;
 import org.sstamilschool.service.TeamService;
 import org.sstamilschool.util.AcademicYear;
 
@@ -30,9 +33,14 @@ import org.sstamilschool.util.AcademicYear;
 @Import(TestSecurityConfig.class)
 class CacheAdminControllerTest {
     @Autowired MockMvc mvc;
+    @MockitoBean DonorService donorService;
     @MockitoBean EmailService emailService;
     @MockitoBean TeamService teamService;
     @MockitoBean CalendarService calendarService;
+    @MockitoBean AnnouncementService announcementService;
+    // This slice also loads PageController, so it needs a mock for every service
+    // that controller injects -- including GalleryService.
+    @MockitoBean GalleryService galleryService;
 
     @Test void teamPageUsesCachedService() throws Exception {
         when(teamService.getPublicTeamMembers()).thenReturn(List.of());
@@ -72,5 +80,18 @@ class CacheAdminControllerTest {
 
         verify(calendarService).evictCalendarEvents();
         verify(calendarService).getCurrentCalendar();
+    }
+
+    @Test void galleryCacheReloadsAndReportsCount() throws Exception {
+        when(galleryService.getPublicEvents()).thenReturn(List.of());
+
+        mvc.perform(patch("/api/gallery/cache").with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("reloaded"))
+                .andExpect(jsonPath("$.resource").value("gallery"))
+                .andExpect(jsonPath("$.count").value(0));
+
+        verify(galleryService).evictGalleryEvents();
+        verify(galleryService).getPublicEvents();
     }
 }

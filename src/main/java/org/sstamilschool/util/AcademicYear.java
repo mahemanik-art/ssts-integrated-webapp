@@ -19,7 +19,11 @@ public final class AcademicYear {
     }
 
     public static String current() {
-        return of(LocalDate.now());
+        // SchoolTime, not LocalDate.now(): the year rolls over on Aug 1, and the
+        // server runs in UTC while the school is US Eastern, so for a few hours
+        // on July 31 the server would report the new year early. Kept in step
+        // with announcement dates, which are also school-zone.
+        return of(SchoolTime.today());
     }
 
     /** Human-readable label for templates, e.g. "2026 – 2027". */

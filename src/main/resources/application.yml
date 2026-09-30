@@ -18,6 +18,13 @@ spring:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
+  # Gallery photo uploads (/superadmin/gallery): per-file and per-request caps.
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: ${MULTIPART_MAX_FILE_SIZE:10MB}
+      max-request-size: ${MULTIPART_MAX_REQUEST_SIZE:60MB}
+
   jpa:
     properties:
       hibernate:
@@ -40,6 +47,16 @@ spring:
 server:
   port: ${PORT:8081}
 
+# Pin DB-internals loggers at WARN in EVERY profile (prod included).
+# DEBUG on com.zaxxer.hikari dumps pool config including the JDBC URL and
+# credentials; keep them quiet so a future dependency bump can't resurface it.
+logging:
+  level:
+    com.zaxxer.hikari: WARN
+    com.zaxxer.hikari.HikariDataSource: WARN
+    org.hibernate: WARN
+    org.hibernate.SQL: WARN  # show-sql in dev is separate and prints statements only, no connection info
+
 app:
   # Base URL used to build password-reset links in emails. Set APP_BASE_URL in stage/prod.
   base-url: ${APP_BASE_URL:http://localhost:8081}
@@ -47,9 +64,37 @@ app:
     # Team page cache lifetime in hours. Force a refresh sooner with PATCH /api/team/cache
     team-ttl-hours: ${TEAM_CACHE_TTL_HOURS:24}
     calendar-ttl-hours: ${CALENDAR_CACHE_TTL_HOURS:24}
+    gallery-ttl-hours: ${GALLERY_CACHE_TTL_HOURS:24}
+      donors-ttl-hours: ${DONORS_CACHE_TTL_HOURS:24}
   password-reset:
     # Password reset token lifetime in seconds (1 hour)
     token-expiry-seconds: ${PASSWORD_RESET_TOKEN_EXPIRY_SECONDS:3600}
-  mail:
-    enabled: ${APP_MAIL_ENABLED:true}
-    from: ${APP_MAIL_FROM:support@sstschool.org}
+    mail:
+      enabled: ${APP_MAIL_ENABLED:true}
+      from: ${APP_MAIL_FROM:support@sstschool.org}
+    storage:
+      # Gallery photos live in an S3-compatible bucket, NOT in the container's
+      # filesystem. A container's disk is discarded on every deploy, so a file
+      # written there would 404 immediately (nothing serves it) and vanish on
+      # the next release while its ssts_gallery_events row survived.
+      #
+      # Cloudflare R2 and AWS S3 both speak the S3 API; point endpoint-url at
+      # R2 (https://<account>.r2.cloudflarestorage.com) and leave region "auto".
+      # For plain AWS S3, leave endpoint-url blank and set the real region.
+      #
+      # enabled=false keeps the app fully startable with no bucket configured:
+      # the admin form then rejects uploads with a readable message instead of
+      # the context failing to start. Do NOT let a missing bucket take the site
+      # down -- the public gallery and every other page must keep working.
+      enabled: ${APP_STORAGE_ENABLED:false}
+      bucket: ${APP_STORAGE_BUCKET:ssts-gallery}
+      region: ${APP_STORAGE_REGION:auto}
+      # Blank for real AWS S3; the R2 account endpoint for R2.
+      endpoint-url: ${APP_STORAGE_ENDPOINT_URL:}
+      # Public base URL the objects are reachable at, e.g.
+      # https://pub-<hash>.r2.dev or https://cdn.example.com. A custom domain
+      # gives stable URLs across bucket renames. Must be https.
+      public-url: ${APP_STORAGE_PUBLIC_URL:}
+      access-key: ${APP_STORAGE_ACCESS_KEY:}
+      secret-key: ${APP_STORAGE_SECRET_KEY:}
+      max-upload-bytes: ${APP_STORAGE_MAX_UPLOAD_BYTES:10485760}

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit Calendar Event | Super Admin | SSTS</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+    <link rel="stylesheet" th:href="@{/css/levels.css}" />
+    <link rel="stylesheet" th:href="@{/css/donors.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+  </head>
+
+  <body class="school-home">
+    <section class="donor-marquee" aria-label="">
+      <div class="marquee-track"></div>
+    </section>
+    <header th:replace="~{fragments/nav :: nav}"></header>
+
+    <main>
+      <section class="intro-section wrap">
+        <div class="page-heading">
+          <h1 th:text="${event.id != null} ? 'Edit event' : 'New event'">Edit event</h1>
+          <p>
+            Fields mirror the public /calendar page exactly: title, event date, optional end date (for multi-day
+            ranges), type (working/holiday), description, academic year, and active flag. Academic year uses the Aug–Jul
+            cycle, e.g.
+            <span th:text="${currentAcademicYear}">2026-2027</span>.
+          </p>
+        </div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <form
+          th:action="${event.id != null} ? @{/superadmin/calendar/{id}(id=${event.id})} : @{/superadmin/calendar}"
+          method="post"
+          class="admin-form"
+        >
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" th:value="${event.title}" required maxlength="255" />
+          </div>
+
+          <div class="form-group">
+            <label for="eventDate">Event date</label>
+            <input type="date" id="eventDate" name="eventDate" th:value="${event.eventDate}" required />
+          </div>
+
+          <div class="form-group">
+            <label for="endDate">End date (optional, multi-day events)</label>
+            <input type="date" id="endDate" name="endDate" th:value="${event.endDate}" />
+          </div>
+
+          <div class="form-group">
+            <label for="eventType">Type</label>
+            <select id="eventType" name="eventType">
+              <option value="working" th:selected="${event.eventType == 'working'}">Working day</option>
+              <option value="holiday" th:selected="${event.eventType == 'holiday'}">Holiday</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description (shown on /calendar as "Title · description")</label>
+            <textarea
+              id="description"
+              name="description"
+              rows="3"
+              maxlength="500"
+              th:text="${event.description}"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="academicYear">Academic year</label>
+            <input
+              type="text"
+              id="academicYear"
+              name="academicYear"
+              th:value="${event.academicYear}"
+              pattern="\d{4}-\d{4}"
+              placeholder="2026-2027"
+              required
+              maxlength="9"
+            />
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" name="active" th:checked="${event.active}" />
+              Active (shown on the public calendar)
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="button" th:text="${event.id != null} ? 'Save changes' : 'Create event'">
+              Save
+            </button>
+            <a th:href="@{/superadmin/calendar}" class="button secondary">Cancel</a>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong>
+        <span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+  </body>
+</html>

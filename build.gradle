@@ -23,8 +23,13 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
-    implementation 'com.github.ben-manes.caffeine:caffeine'
-    runtimeOnly 'org.postgresql:postgresql'
+      implementation 'com.github.ben-manes.caffeine:caffeine'
+      // Gallery photo storage. AWS SDK v2 speaks plain S3, so the same client
+      // works against AWS S3, Cloudflare R2, MinIO or any S3-compatible
+      // endpoint -- the endpoint/region come from app.storage.* config.
+      implementation platform('software.amazon.awssdk:bom:2.30.38')
+      implementation 'software.amazon.awssdk:s3'
+      runtimeOnly 'org.postgresql:postgresql'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }

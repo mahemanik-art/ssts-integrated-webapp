@@ -23,28 +23,25 @@
     <link rel="stylesheet" th:href="@{/css/donors.css}" />
   </head>
   <body class="school-home">
-    <section class="donor-marquee" aria-label="School announcements">
+    <!-- School announcements come from ssts_announcements via AnnouncementService
+         (active + not expired, most recent first). Hidden entirely when there is
+         nothing to show, rather than leaving an empty ticker on the page. The
+         sequence is rendered TWICE -- the second copy aria-hidden -- because the
+         .marquee-track CSS animation loops by translating the track from 100%
+         to -100%, so a single copy would visibly jump at the wrap point. -->
+    <section class="donor-marquee" aria-label="School announcements" th:if="${!announcements.isEmpty()}">
       <div class="marquee-track">
-        <span class="marquee-label">School Announcements</span
-        ><span>📢 Registration for the 2026–27 school year is now open</span><b>✦</b
-        ><span>Classes resume this Friday, 7:00–8:15 PM</span><b>✦</b
-        ><span>Deepavali celebration & student performances — Nov 7</span><b>✦</b
-        ><span>Volunteer sign-ups are open at the front desk</span><b>✦</b
-        ><span aria-hidden="true">School Announcements</span
-        ><span aria-hidden="true">📢 Registration for the 2026–27 school year is now open</span
-        ><b aria-hidden="true">✦</b><span aria-hidden="true">Classes resume this Friday, 7:00–8:15 PM</span
-        ><b aria-hidden="true">✦</b><span aria-hidden="true">Deepavali celebration & student performances — Nov 7</span
-        ><b aria-hidden="true">✦</b><span aria-hidden="true">Volunteer sign-ups are open at the front desk</span
-        ><b aria-hidden="true">✦</b>
+        <span class="marquee-label">School Announcements</span>
+        <th:block th:each="announcement : ${announcements}">
+          <span th:text="${announcement.title} + ' — ' + ${announcement.message}">Title — message</span><b>✦</b>
+        </th:block>
+        <th:block th:each="announcement : ${announcements}">
+          <span aria-hidden="true" th:text="${announcement.title} + ' — ' + ${announcement.message}"></span
+          ><b aria-hidden="true">✦</b>
+        </th:block>
       </div>
     </section>
-    <header class="template-header wrap">
-      <a href="/" class="header-logo"><img src="/images/ssts-logo.png" alt="Sandy Springs Tamil School logo" /></a>
-      <nav aria-label="Main navigation">
-        <a class="active" href="/">Home</a><a href="/about">About</a><a href="/calendar">Calendar</a
-        ><a href="/team">Our Team</a><a href="/contact">Contact</a>
-      </nav>
-    </header>
+    <header th:replace="~{fragments/nav :: nav}"></header>
     <main>
       <section class="template-hero wrap">
         <div class="hero-heading rise-in">
@@ -76,44 +73,97 @@
               ><a class="rating-link" href="/contact">Join SSTS Family!</a>
             </div>
           </div>
+          <!--
+            Donor carousel: a THREE-card window that cycles through every
+            publicly listed donor, which is how this section displayed before
+            the donors became database rows. Only VISIBLE_DONOR_CARDS cards are
+            in the DOM, so the narrow column beside the hero slider keeps its
+            original height instead of growing once per donor.
+
+            The first three donors are rendered server-side, so with JavaScript
+            disabled the section still shows real content. static/js/donor-carousel.js
+            then takes over and swaps the card contents, driven by the JSON
+            block below -- server data, never hardcoded donor objects.
+          -->
           <aside class="donor-cards" id="donorCards" aria-label="Featured education donors">
-            <div class="donor-cards-header"><span class="donor-label">Education Donors</span></div>
-            <article class="donor-card">
+            <div class="donor-cards-header">
+              <span class="donor-label">Education Donors</span>
+            </div>
+
+            <!--
+              th:src is a LINK expression on purpose: a donor photo may be a
+              committed /images/... path or an absolute https:// bucket URL, and
+              the link form passes the absolute one through untouched.
+            -->
+            <article class="donor-card" th:each="donor : ${donorWindow}">
               <img
+                th:if="${donor.photoPath != null and !donor.photoPath.isEmpty()}"
                 class="donor-photo"
-                src="/images/MadrasPhotStudios.jpg"
-                alt="Sample photo for Madras Photo Studios"
+                th:src="@{${donor.photoPath}}"
+                th:alt="${'Logo for ' + donor.name}"
               />
+              <!--
+                A donor with no logo still needs to occupy the same 150px photo
+                block, or its card renders visibly shorter than its siblings. The
+                tile shows the name's first letter, mirroring the gradient
+                fallback in team.html.
+              -->
+              <div
+                th:if="${donor.photoPath == null or donor.photoPath.isEmpty()}"
+                class="donor-photo donor-photo--fallback"
+                th:aria-label="${donor.name + ' has no logo'}"
+                th:text="${#strings.substring(donor.name, 0, 1)}"
+              >
+                M
+              </div>
               <div class="donor-info">
-                <strong class="donor-name">Madras Photo Studios</strong
-                ><span class="donor-biz">Capturing Life, Unscripted.</span
-                ><a class="donor-link" href="https://madrasphoto.example.com" target="_blank" rel="noopener"
+                <strong class="donor-name" th:text="${donor.name}">Donor</strong>
+                <span
+                  class="donor-biz"
+                  th:if="${donor.tagline != null and !donor.tagline.isEmpty()}"
+                  th:text="${donor.tagline}"
+                  >Tagline</span
+                >
+                <a
+                  class="donor-link"
+                  th:if="${donor.websiteUrl != null and !donor.websiteUrl.isEmpty()}"
+                  th:href="${donor.websiteUrl}"
+                  target="_blank"
+                  rel="noopener"
                   >Visit website ↗</a
                 >
               </div>
             </article>
-            <article class="donor-card">
-              <img class="donor-photo" src="/images/BlueOakConsulting.jpg" alt="Sample photo for Blue Oak Consulting" />
-              <div class="donor-info">
-                <strong class="donor-name">Blue Oak Consulting</strong><span class="donor-biz">Technology Services</span
-                ><a class="donor-link" href="https://blueoak.example.com" target="_blank" rel="noopener"
-                  >Visit website ↗</a
-                >
-              </div>
-            </article>
-            <article class="donor-card">
-              <img
-                class="donor-photo"
-                src="/images/AtlantaMojoProductions.jpg"
-                alt="Sample photo for Altanta Mojo Productions"
-              />
-              <div class="donor-info">
-                <strong class="donor-name">Altanta Mojo Productions</strong
-                ><span class="donor-biz">Audio and Sound Service</span
-                ><a class="donor-link" href="https://amp.example.com" target="_blank" rel="noopener">Visit website ↗</a>
-              </div>
-            </article>
+
+            <p class="donor-empty" th:if="${#lists.isEmpty(donors)}">Our donor list is being updated.</p>
+
+            <!--
+              Controls are rendered only when there is more than one window of
+              donors, so a school with three or fewer donors never shows a
+              pointless arrow. donor-carousel.js wires them up.
+            -->
+            <div
+              class="donor-nav"
+              th:if="${donors.size() > donorWindowSize}"
+              role="group"
+              aria-label="Donor carousel controls"
+            >
+              <button type="button" class="donor-nav-btn" data-donor-prev aria-label="Previous donors">‹</button>
+              <div class="donor-dots" data-donor-dots></div>
+              <button type="button" class="donor-nav-btn" data-donor-next aria-label="Next donors">›</button>
+            </div>
           </aside>
+
+          <!--
+            Every publicly listed donor as JSON, so the carousel rotates through
+            the real rows. Thymeleaf's JavaScript inlining escapes these values
+            for the script context, so a donor name containing quotes or markup
+            cannot break out. Only the four public fields in DonorCard are
+            exposed -- never notes, seedKey, or the audit timestamps.
+          -->
+          <script th:inline="javascript" type="text/javascript">
+            window.__SSTS_DONORS = /*[[${donorCards}]]*/ [];
+          </script>
         </div>
       </section>
       <section class="intro-section wrap reveal">
@@ -234,6 +284,7 @@
         ><span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
       </div>
     </footer>
+    <script th:src="@{/js/donor-carousel.js}"></script>
     <script>
       (function () {
         var slider = document.getElementById('heroSlider');
@@ -244,7 +295,9 @@
           timer;
         // Shared donor-carousel reset hook: set by the donor script below so hero
         // interactions restart both 8s timers together.
-        window.__syncDonorTimer = null;
+        function syncDonorTimer() {
+          if (window.__syncDonorTimer) window.__syncDonorTimer();
+        }
         function go(n) {
           i = (n + slides.length) % slides.length;
           slides.forEach(function (s, x) {
@@ -259,117 +312,25 @@
           timer = setInterval(function () {
             go(i + 1);
           }, 8000);
-          if (window.__syncDonorTimer) window.__syncDonorTimer();
         }
         slider.querySelector('.slider-nav.next').addEventListener('click', function () {
           go(i + 1);
           reset();
+          syncDonorTimer();
         });
         slider.querySelector('.slider-nav.prev').addEventListener('click', function () {
           go(i - 1);
           reset();
+          syncDonorTimer();
         });
         dots.forEach(function (d) {
           d.addEventListener('click', function () {
             go(parseInt(d.dataset.slide, 10));
             reset();
+            syncDonorTimer();
           });
         });
         reset();
-      })();
-    </script>
-    <script>
-      (function () {
-        var wrap = document.getElementById('donorCards');
-        if (!wrap) return;
-        var cards = wrap.querySelectorAll('.donor-card');
-        var donors = [
-          {
-            name: 'JJJ Fortune LLC',
-            biz: 'Human resources consulting services',
-            photo: '/images/JJJFortuneLLC.jpg',
-            site: 'https://jjjfortune.example.com',
-          },
-          {
-            name: 'Madras Photo Studios',
-            biz: 'Capturing Life, Unscripted.',
-            photo: '/images/MadrasPhotStudios.jpg',
-            site: 'https://madrasphoto.example.com',
-          },
-          {
-            name: 'Rigel Spices',
-            biz: 'Farm-fresh Indian foods',
-            photo: '/images/RigelSpices.jpg',
-            site: 'https://rigelspices.example.com',
-          },
-          {
-            name: 'Blue Oak Consulting',
-            biz: 'Technology Services',
-            photo: '/images/BlueOakConsulting.jpg',
-            site: 'https://blueoak.example.com',
-          },
-          {
-            name: 'Atlanta Mojo Productions',
-            biz: 'Audio and Sound Service',
-            photo: '/images/AtlantaMojoProductions.jpg',
-            site: 'https://amp.example.com',
-          },
-          {
-            name: 'Peachtree Learning Co.',
-            biz: 'Tutoring & Childcare',
-            photo: '/images/PeachtreeLearningCo.jpg',
-            site: 'https://peachtreelearning.example.com',
-          },
-          {
-            name: 'Meena Family',
-            biz: 'Meena Dance Academy',
-            photo: '/images/campus-placeholder.jpg',
-            site: 'https://meenadance.example.com',
-          },
-          {
-            name: 'Northside Foods',
-            biz: 'Fresh Groceries',
-            photo: '/images/campus-placeholder.jpg',
-            site: 'https://northsidefoods.example.com',
-          },
-          {
-            name: 'Riverwood Dental',
-            biz: 'Family Dentistry',
-            photo: '/images/RiverwoodDental.jpg',
-            site: 'https://riverwooddental.example.com',
-          },
-        ];
-        var idx = 0,
-          dTimer;
-        function show() {
-          Array.prototype.forEach.call(cards, function (card, n) {
-            var d = donors[(idx + n) % donors.length];
-            card.classList.add('turning');
-            setTimeout(
-              function () {
-                card.querySelector('.donor-photo').src = d.photo;
-                card.querySelector('.donor-photo').alt = 'Sample photo for ' + d.name;
-                card.querySelector('.donor-name').textContent = d.name;
-                card.querySelector('.donor-biz').textContent = d.biz;
-                var link = card.querySelector('.donor-link');
-                if (link) {
-                  link.href = d.site;
-                }
-                card.classList.remove('turning');
-              },
-              300 + n * 90,
-            );
-          });
-        }
-        function startDonorTimer() {
-          clearInterval(dTimer);
-          dTimer = setInterval(function () {
-            idx = (idx + 1) % donors.length;
-            show();
-          }, 8000);
-        }
-        window.__syncDonorTimer = startDonorTimer;
-        startDonorTimer();
       })();
     </script>
   </body>

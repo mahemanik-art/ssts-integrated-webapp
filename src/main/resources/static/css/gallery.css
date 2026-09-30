@@ -1,0 +1,362 @@
+/* Event Gallery: horizontally stacked events, mouse-driven scroll */
+
+.gallery-main {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.gallery-stage {
+  position: relative;
+  flex: 1;
+  min-height: 62vh;
+  display: flex;
+  align-items: center;
+}
+
+.gallery-track {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 3rem 12vw;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  cursor: grab;
+}
+
+.gallery-track::-webkit-scrollbar {
+  display: none;
+}
+
+.event-card {
+  flex: 0 0 auto;
+  width: clamp(240px, 26vw, 340px);
+  background: var(--card-bg, rgba(255, 255, 255, 0.08));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  overflow: hidden;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+  transform: scale(0.92);
+}
+
+.event-card.centered {
+  transform: scale(1);
+  border-color: rgba(255, 214, 130, 0.6);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  z-index: 1;
+}
+
+.event-media {
+  position: relative;
+  height: 170px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(
+    135deg,
+    hsl(var(--event-hue, 210) 60% 30%),
+    hsl(calc(var(--event-hue, 210) + 40) 65% 18%)
+  );
+  overflow: hidden;
+}
+
+/* Slide stack: every photo fills the media block; only .slide--active shows. */
+.event-slides,
+.event-slides .slide {
+  position: absolute;
+  inset: 0;
+}
+
+.event-slides {
+  display: block;
+}
+
+.event-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: opacity 0.35s ease;
+}
+
+.event-slides .slide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.event-slides .slide--active {
+  opacity: 1;
+}
+
+/* Hover-revealed ◀ ▶ arrows over the card. */
+.slide-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(15, 30, 38, 0.75);
+  color: #f7c766;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.25s ease,
+    background 0.2s ease;
+  z-index: 2;
+}
+
+.slide-arrow--prev {
+  left: 8px;
+}
+
+.slide-arrow--next {
+  right: 8px;
+}
+
+.event-card:hover .slide-arrow,
+.event-card:focus-within .slide-arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.slide-arrow:hover {
+  background: rgba(15, 30, 38, 0.95);
+}
+
+/* 1 / N counter, shown once the card is hovered. */
+.slide-count {
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(15, 30, 38, 0.75);
+  color: #fff;
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 2;
+}
+
+.slide-count--visible,
+.event-card:hover .slide-count {
+  opacity: 0.9;
+}
+
+/* Real photo (non-slider fallback when no slides block): fills the media block. */
+.event-media > .event-photo {
+  position: static;
+}
+
+/* No image_url: first letter of the title, mirroring .team-photo-fallback. */
+.event-fallback {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #f7c766;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  font-family: "Source Sans 3", sans-serif;
+}
+
+.event-body {
+  padding: 1rem 1.2rem 1.4rem;
+}
+
+.event-date {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  margin: 0 0 0.35rem;
+}
+
+.event-body h2 {
+  margin: 0 0 0.4rem;
+  font-size: 1.15rem;
+}
+
+.event-body p:last-child {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
+.gallery-hint {
+  position: absolute;
+  bottom: 0.6rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.gallery-empty {
+  text-align: center;
+  color: #9aaeb6;
+  font-size: 1rem;
+  width: 100%;
+}
+
+/* ---- Strip arrows: fixed at the stage edges, scroll the card strip ----- */
+.strip-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 64px;
+  height: 110px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  background: rgba(15, 30, 38, 0.7);
+  color: #f7c766;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 3;
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.strip-arrow--prev {
+  left: 16px;
+}
+
+.strip-arrow--next {
+  right: 16px;
+}
+
+.strip-arrow:hover {
+  background: rgba(15, 30, 38, 0.95);
+}
+
+.strip-arrow:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+
+/* ---- Lightbox: click a card for a large slider ------------------------- */
+.gallery-lightbox {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  background: rgba(8, 14, 18, 0.92);
+  z-index: 50;
+}
+
+.gallery-lightbox[hidden] {
+  display: none;
+}
+
+.lightbox-figure {
+  margin: 0;
+  max-width: min(90vw, 1100px);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.lightbox-figure img {
+  max-width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.lightbox-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.2rem 0;
+  color: #dfe9ec;
+  font-size: 0.9rem;
+}
+
+.lightbox-counter {
+  opacity: 0.7;
+}
+
+.lightbox-arrow,
+.lightbox-close {
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 50%;
+  background: rgba(15, 30, 38, 0.7);
+  color: #f7c766;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition: background 0.2s ease;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+}
+
+.lightbox-arrow:hover,
+.lightbox-close:hover {
+  background: rgba(15, 30, 38, 0.95);
+}
+
+@media (max-width: 640px) {
+  .strip-arrow {
+    width: 44px;
+    height: 84px;
+    font-size: 1.4rem;
+  }
+
+  .strip-arrow--prev {
+    left: 6px;
+  }
+
+  .strip-arrow--next {
+    right: 6px;
+  }
+
+  .lightbox-caption {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 640px) {
+  .gallery-track {
+    padding: 2rem 8vw;
+    gap: 1.25rem;
+  }
+
+  .event-card {
+    width: 76vw;
+  }
+
+  .event-media {
+    position: relative;
+    height: 130px;
+  }
+
+  .slide-arrow {
+    width: 28px;
+    height: 28px;
+  }
+}

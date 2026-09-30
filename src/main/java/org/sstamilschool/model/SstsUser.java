@@ -37,10 +37,6 @@ public class SstsUser implements UserDetails, Serializable {
     @Column(nullable = false, length = 20)
     private String userType = "parent";
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = jakarta.persistence.CascadeType.ALL)
-    @JoinColumn(name = "profile_id")
-    private SstsUserProfile profile;
-
     @Column(length = 100)
     private String designation;
 
@@ -59,6 +55,48 @@ public class SstsUser implements UserDetails, Serializable {
 
     @Column(nullable = false)
     private boolean emailVerified = false;
+
+    // Per-person detail (was ssts_user_profiles, merged in)
+    private LocalDate dateOfBirth;
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+    @Column(length = 100)
+    private String occupation;
+    @Column(length = 100)
+    private String employer;
+    private Integer yearsInCommunity = 0;
+    @Column(length = 20)
+    private String phone;
+    @Column(length = 100)
+    private String alternateEmail;
+    @Column(length = 255)
+    private String addressLine1;
+    @Column(length = 255)
+    private String addressLine2;
+    @Column(length = 100)
+    private String city;
+    @Column(length = 50)
+    private String state;
+    @Column(length = 20)
+    private String zipCode;
+    @Column(length = 50)
+    private String country = "USA";
+    @Column(length = 500)
+    private String avatarUrl;
+    @Column(columnDefinition = "TEXT")
+    private String priorEducation;
+    @Column(columnDefinition = "TEXT")
+    private String priorTamilExperience;
+    @Column(columnDefinition = "TEXT")
+    private String priorTeachingExperience;
+    @Column(columnDefinition = "TEXT")
+    private String priorVolunteerExperience;
+    @Column(columnDefinition = "TEXT")
+    private String certifications;
+    @Column(columnDefinition = "TEXT")
+    private String interests;
+    @Column(length = 100)
+    private String department;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -112,8 +150,6 @@ public class SstsUser implements UserDetails, Serializable {
     public String getUserType() { return userType; }
     public void setUserType(String userType) { this.userType = userType; }
 
-    public SstsUserProfile getProfile() { return profile; }
-    public void setProfile(SstsUserProfile profile) { this.profile = profile; }
 
     public String getDesignation() { return designation; }
     public void setDesignation(String designation) { this.designation = designation; }
@@ -135,6 +171,49 @@ public class SstsUser implements UserDetails, Serializable {
 
     public boolean isEmailVerified() { return emailVerified; }
     public void setEmailVerified(boolean emailVerified) { this.emailVerified = emailVerified; }
+
+    public LocalDate getDateOfBirth() { return dateOfBirth; }
+    public void setDateOfBirth(LocalDate dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
+    public String getOccupation() { return occupation; }
+    public void setOccupation(String occupation) { this.occupation = occupation; }
+    public String getEmployer() { return employer; }
+    public void setEmployer(String employer) { this.employer = employer; }
+    public Integer getYearsInCommunity() { return yearsInCommunity; }
+    public void setYearsInCommunity(Integer yearsInCommunity) { this.yearsInCommunity = yearsInCommunity; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public String getAlternateEmail() { return alternateEmail; }
+    public void setAlternateEmail(String alternateEmail) { this.alternateEmail = alternateEmail; }
+    public String getAddressLine1() { return addressLine1; }
+    public void setAddressLine1(String addressLine1) { this.addressLine1 = addressLine1; }
+    public String getAddressLine2() { return addressLine2; }
+    public void setAddressLine2(String addressLine2) { this.addressLine2 = addressLine2; }
+    public String getCity() { return city; }
+    public void setCity(String city) { this.city = city; }
+    public String getState() { return state; }
+    public void setState(String state) { this.state = state; }
+    public String getZipCode() { return zipCode; }
+    public void setZipCode(String zipCode) { this.zipCode = zipCode; }
+    public String getCountry() { return country; }
+    public void setCountry(String country) { this.country = country; }
+    public String getAvatarUrl() { return avatarUrl; }
+    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+    public String getPriorEducation() { return priorEducation; }
+    public void setPriorEducation(String priorEducation) { this.priorEducation = priorEducation; }
+    public String getPriorTamilExperience() { return priorTamilExperience; }
+    public void setPriorTamilExperience(String priorTamilExperience) { this.priorTamilExperience = priorTamilExperience; }
+    public String getPriorTeachingExperience() { return priorTeachingExperience; }
+    public void setPriorTeachingExperience(String priorTeachingExperience) { this.priorTeachingExperience = priorTeachingExperience; }
+    public String getPriorVolunteerExperience() { return priorVolunteerExperience; }
+    public void setPriorVolunteerExperience(String priorVolunteerExperience) { this.priorVolunteerExperience = priorVolunteerExperience; }
+    public String getCertifications() { return certifications; }
+    public void setCertifications(String certifications) { this.certifications = certifications; }
+    public String getInterests() { return interests; }
+    public void setInterests(String interests) { this.interests = interests; }
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }

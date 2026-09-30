@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Donation | Super Admin | SSTS</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+    <link rel="stylesheet" th:href="@{/css/levels.css}" />
+    <link rel="stylesheet" th:href="@{/css/donors.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+  </head>
+
+  <body class="school-home">
+    <section class="donor-marquee" aria-label="">
+      <div class="marquee-track"></div>
+    </section>
+    <header th:replace="~{fragments/nav :: nav}"></header>
+
+    <main>
+      <section class="intro-section wrap">
+        <div class="page-heading">
+          <h1 th:text="${donation.id == null} ? 'Record a donation' : 'Edit donation'">Record a donation</h1>
+        </div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <form
+          class="admin-form"
+          method="post"
+          th:action="${donation.id == null} ? @{/superadmin/donations} : @{'/superadmin/donations/' + ${donation.id}}"
+        >
+          <div class="form-row">
+            <label for="donorId">Donor <span class="required">*</span></label>
+            <!--
+              The picker sends a plain donor id, NOT a bound SstsDonor: binding the
+              entity would let a crafted POST carry a whole donor object, and the
+              service resolves the id through DonorService.require() so the
+              reference can never dangle or point at a donor the form did not offer.
+            -->
+            <select id="donorId" name="donorId" required>
+              <option value="">— choose a donor —</option>
+              <option
+                th:each="d : ${donors}"
+                th:value="${d.id}"
+                th:text="${d.name}"
+                th:selected="${donation.donor != null and donation.donor.id == d.id}"
+              >
+                Donor
+              </option>
+            </select>
+            <small class="field-hint">
+              Inactive donors are not listed. Add one on the
+              <a th:href="@{/superadmin/donors}">Donors</a> screen.
+            </small>
+          </div>
+
+          <div class="form-row">
+            <label for="amount">Amount <span class="required">*</span></label>
+            <!--
+              type="number" step="0.01" with a decimal value: the browser's number
+              widget yields a plain decimal string, which SstsDonation.setAmount
+              (String) parses exactly. Nothing routes the value through a double.
+            -->
+            <input
+              id="amount"
+              type="number"
+              name="amount"
+              step="0.01"
+              min="0.01"
+              th:value="${donation.amount}"
+              placeholder="0.00"
+              required
+            />
+            <small class="field-hint">
+              Dollars, up to 2 decimal places. Stored exactly, so the total always reconciles.
+            </small>
+          </div>
+
+          <div class="form-row">
+            <label for="donatedOn">Date <span class="required">*</span></label>
+            <input
+              id="donatedOn"
+              type="date"
+              name="donatedOn"
+              th:value="${#temporals.format(donation.donatedOn, 'yyyy-MM-dd')}"
+              required
+            />
+            <small class="field-hint"
+              >Defaults to today in the school's timezone (<span th:text="${today}">2026-01-01</span>).</small
+            >
+          </div>
+
+          <div class="form-row">
+            <label for="method">Method</label>
+            <!-- An open list, not a closed one: the school adds methods as it needs them. -->
+            <input id="method" type="text" name="method" maxlength="40" th:value="${donation.method}" list="methods" />
+            <datalist id="methods">
+              <option value="cash"></option>
+              <option value="check"></option>
+              <option value="online"></option>
+              <option value="in_kind"></option>
+            </datalist>
+          </div>
+
+          <div class="form-row">
+            <label for="referenceNo">Reference</label>
+            <input id="referenceNo" type="text" name="referenceNo" maxlength="120" th:value="${donation.referenceNo}" />
+            <small class="field-hint">Check number, transaction id, or similar.</small>
+          </div>
+
+          <div class="form-row">
+            <label for="notes">Notes</label>
+            <textarea id="notes" name="notes" rows="3" th:text="${donation.notes}"></textarea>
+          </div>
+
+          <p class="admin-hint" th:if="${donation.id != null}">
+            The donor cannot be changed on an edit. To move a gift to a different donor, delete this entry and record a
+            new one — that keeps the giving history an honest record rather than a value that silently moved.
+          </p>
+
+          <div class="form-actions">
+            <button type="submit" class="button">Save donation</button>
+            <a th:href="@{/superadmin/donations}" class="button button--ghost">Cancel</a>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong>
+        <span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+  </body>
+</html>

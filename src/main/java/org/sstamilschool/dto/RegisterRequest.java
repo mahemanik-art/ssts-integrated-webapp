@@ -11,7 +11,17 @@ public class RegisterRequest {
     private boolean receiveNewsletter = false;
     private boolean receiveVolunteerUpdates = false;
 
+    // --- Family-owned (ssts_families), not user-owned -------------------
+    // These were previously written onto ssts_users. See ParentService: a
+    // parent's phone and address belong to the household, and UserAdminService
+    // already refuses to write them for user_type='parent'.
     private String phone;
+    private String phone2;
+    private String parent2FullName;
+    private String parent2Email;
+    private String emergencyContact;
+
+    // --- Person-owned (ssts_users) --------------------------------------
     private String alternateEmail;
     private String addressLine1;
     private String addressLine2;
@@ -26,9 +36,7 @@ public class RegisterRequest {
     private Integer yearsInCommunity;
     private String priorEducation;
     private String priorTamilExperience;
-    private String priorTeachingExperience;
     private String priorVolunteerExperience;
-    private String certifications;
     private String interests;
 
     public String getFullName() { return fullName; }
@@ -94,15 +102,21 @@ public class RegisterRequest {
     public String getPriorTamilExperience() { return priorTamilExperience; }
     public void setPriorTamilExperience(String priorTamilExperience) { this.priorTamilExperience = priorTamilExperience; }
 
-    public String getPriorTeachingExperience() { return priorTeachingExperience; }
-    public void setPriorTeachingExperience(String priorTeachingExperience) { this.priorTeachingExperience = priorTeachingExperience; }
-
     public String getPriorVolunteerExperience() { return priorVolunteerExperience; }
     public void setPriorVolunteerExperience(String priorVolunteerExperience) { this.priorVolunteerExperience = priorVolunteerExperience; }
 
-    public String getCertifications() { return certifications; }
-    public void setCertifications(String certifications) { this.certifications = certifications; }
-
     public String getInterests() { return interests; }
     public void setInterests(String interests) { this.interests = interests; }
+
+    public String getPhone2() { return phone2; }
+    public void setPhone2(String phone2) { this.phone2 = phone2; }
+
+    public String getParent2FullName() { return parent2FullName; }
+    public void setParent2FullName(String parent2FullName) { this.parent2FullName = parent2FullName; }
+
+    public String getParent2Email() { return parent2Email; }
+    public void setParent2Email(String parent2Email) { this.parent2Email = parent2Email; }
+
+    public String getEmergencyContact() { return emergencyContact; }
+    public void setEmergencyContact(String emergencyContact) { this.emergencyContact = emergencyContact; }
 }

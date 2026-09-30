@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Donations | Super Admin | SSTS</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+    <link rel="stylesheet" th:href="@{/css/levels.css}" />
+    <link rel="stylesheet" th:href="@{/css/donors.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+  </head>
+
+  <body class="school-home">
+    <section class="donor-marquee" aria-label="">
+      <div class="marquee-track"></div>
+    </section>
+    <header th:replace="~{fragments/nav :: nav}"></header>
+
+    <main>
+      <section class="intro-section wrap">
+        <div class="page-heading">
+          <h1>Donations</h1>
+          <p>
+            The gift ledger. Every total on this screen is summed from these rows at read time — nothing is stored
+            pre-totalled, so a number here can never drift from the entries below it. Amounts are exact decimal values,
+            not floats, so the total always reconciles to the cent.
+          </p>
+        </div>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <div class="admin-toolbar">
+          <a th:href="@{/superadmin/donations/new}" class="button">+ Record donation</a>
+          <a th:href="@{/superadmin/donors}" class="button">Donors</a>
+          <span class="admin-hint"
+            >All time: <strong th:text="'$' + ${#numbers.formatDecimal(total, 1, 2)}">$0.00</strong></span
+          >
+          <span class="admin-hint"
+            ><span th:text="${currentYear}">2026</span>:
+            <strong th:text="'$' + ${#numbers.formatDecimal(yearTotal, 1, 2)}">$0.00</strong></span
+          >
+        </div>
+
+        <table class="admin-table admin-table--donations" th:if="${!donations.isEmpty()}">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Donor</th>
+              <th>Amount</th>
+              <th>Method</th>
+              <th>Reference</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="d : ${donations}">
+              <td th:text="${#temporals.format(d.donatedOn, 'MMM d, yyyy')}">Jan 15, 2026</td>
+              <td th:text="${d.donor != null} ? ${d.donor.name} : '—'">Donor</td>
+              <td th:text="'$' + ${#numbers.formatDecimal(d.amount, 1, 2)}">$0.00</td>
+              <td th:text="${d.method}">Method</td>
+              <td th:text="${d.referenceNo}">Ref</td>
+              <td th:text="${d.notes}">Notes</td>
+              <td class="actions">
+                <a th:href="@{'/superadmin/donations/' + ${d.id} + '/edit'}">Edit</a>
+                <form
+                  th:action="@{'/superadmin/donations/' + ${d.id} + '/delete'}"
+                  method="post"
+                  class="inline-delete"
+                  th:data-confirm="|Delete this donation of ${d.amount}? The donor's total will change.|"
+                >
+                  <button type="submit" class="delete-button">Delete</button>
+                </form>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <th colspan="2">Total</th>
+              <th th:text="'$' + ${#numbers.formatDecimal(total, 1, 2)}">$0.00</th>
+              <th colspan="4"></th>
+            </tr>
+          </tfoot>
+        </table>
+
+        <p th:if="${donations.isEmpty()}">No donations recorded yet.</p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong>
+        <span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+    <script th:src="@{/js/inline-delete.js}"></script>
+  </body>
+</html>

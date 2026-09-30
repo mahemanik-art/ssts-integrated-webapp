@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Team Members | Super Admin | SSTS</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+    <link rel="stylesheet" th:href="@{/css/levels.css}" />
+    <link rel="stylesheet" th:href="@{/css/donors.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+  </head>
+
+  <body class="school-home">
+    <section class="donor-marquee" aria-label="">
+      <div class="marquee-track"></div>
+    </section>
+    <header th:replace="~{fragments/nav :: nav}"></header>
+
+    <main>
+      <section class="intro-section wrap">
+        <div class="page-heading">
+          <h1>Team members</h1>
+          <p>
+            These are the staff and volunteers shown on the public
+            <a href="/team">/team</a> page. Every change is published there immediately.
+          </p>
+        </div>
+        <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <div class="admin-toolbar">
+          <a th:href="@{/superadmin/team/new}" class="button">+ New member</a>
+        </div>
+
+        <table class="admin-table admin-table--team" th:if="${!members.isEmpty()}">
+          <thead>
+            <tr>
+              <th>Photo</th>
+              <th>Full name</th>
+              <th>Designation</th>
+              <th>Type</th>
+              <th>Bio</th>
+              <th>Active</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="member : ${members}">
+              <td>
+                <img
+                  th:if="${member.avatarUrl != null and !member.avatarUrl.isEmpty()}"
+                  th:src="@{${member.avatarUrl}}"
+                  th:alt="${'Photo of ' + member.fullName}"
+                  style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover"
+                />
+                <span th:if="${member.avatarUrl == null or member.avatarUrl.isEmpty()}">—</span>
+              </td>
+              <td th:text="${member.fullName}">Full Name</td>
+              <td th:text="${member.designation}">Designation</td>
+              <td th:text="${member.userType}">staff</td>
+              <td th:text="${member.bio} ?: ''">Bio</td>
+              <td th:text="${member.active} ? 'yes' : 'no'">yes</td>
+              <td class="actions">
+                <a th:href="@{'/superadmin/team/' + ${member.id} + '/edit'}">Edit</a>
+                <form
+                  th:action="@{'/superadmin/team/' + ${member.id} + '/delete'}"
+                  method="post"
+                  class="inline-delete"
+                  th:data-confirm='|Delete "${member.fullName}"? Their login is removed too.|'
+                >
+                  <button type="submit" class="delete-button">Delete</button>
+                </form>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p th:if="${members.isEmpty()}">No team members yet. Add the first one.</p>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong>
+        <span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+    <script th:src="@{/js/inline-delete.js}"></script>
+  </body>
+</html>

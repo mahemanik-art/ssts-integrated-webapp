@@ -1,6 +1,5 @@
 package org.sstamilschool.controller;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +11,6 @@ import org.sstamilschool.dto.RegisterRequest;
 import org.sstamilschool.service.LoginService;
 import org.sstamilschool.service.PasswordResetService;
 import org.sstamilschool.service.EmailService;
-import org.sstamilschool.model.SstsUser;
 
 @Controller
 public class LoginController {
@@ -42,24 +40,6 @@ public class LoginController {
             model.addAttribute("message", "Your password has been reset. You can now log in.");
         }
         return "login";
-    }
-
-    @PostMapping("/login")
-    public String processLogin(@RequestParam String username,
-                               @RequestParam String password,
-                               Model model) {
-        try {
-            if (loginService.authenticate(username, password)) {
-                var auth = SecurityContextHolder.getContext().getAuthentication();
-                var user = (SstsUser) auth.getPrincipal();
-                return loginService.redirectBasedOnUserType(user.getId());
-            }
-            model.addAttribute("error", "Invalid username or password");
-            return "login";
-        } catch (Exception e) {
-            model.addAttribute("error", e.getMessage());
-            return "login";
-        }
     }
 
     @GetMapping("/register")

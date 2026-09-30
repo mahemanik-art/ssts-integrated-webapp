@@ -11,11 +11,19 @@
   justify-items: center;
   align-content: start;
 }
-.hero-heading {
+/* Scoped to .template-hero on purpose. This stylesheet is linked by all 31
+   templates and the bare `.hero-heading` selector would match anywhere the
+   class is ever reused; `.template-hero` exists only in index.html, so this
+   rule is the home page alone. The bottom padding is deliberately much smaller
+   than the top: the heading is the small band above a very tall .hero-visual
+   (three 252px donor cards + header + nav), so trimming the gap here pulls the
+   first row of content up without touching the heading's own breathing room
+   against the top of the section. */
+.template-hero .hero-heading {
   text-align: center;
   width: 100%;
   max-width: 1120px;
-  padding: clamp(22px, 3vh, 30px) 24px clamp(20px, 3vh, 34px);
+  padding: clamp(22px, 3vh, 30px) 24px clamp(8px, 1.1vh, 12px);
   color: inherit;
 }
 /* Old hero-copy typography for the same text, sized at 50% */
@@ -160,8 +168,8 @@
     padding: 0;
     align-content: start;
   }
-  .hero-heading {
-    padding: 22px 20px 22px;
+  .template-hero .hero-heading {
+    padding: 22px 20px 10px;
   }
   .hero-heading h1 {
     font-size: clamp(1.45rem, 7vw, 2.25rem);

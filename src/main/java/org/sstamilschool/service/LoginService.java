@@ -9,10 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.sstamilschool.dto.RegisterRequest;
 import org.sstamilschool.repository.SstsRoleRepository;
 import org.sstamilschool.repository.SstsUserRepository;
-import org.sstamilschool.repository.SstsUserProfileRepository;
 import org.sstamilschool.model.SstsRole;
 import org.sstamilschool.model.SstsUser;
-import org.sstamilschool.model.SstsUserProfile;
 
 import java.time.LocalDateTime;
 
@@ -21,15 +19,15 @@ public class LoginService {
 
     private final SstsUserRepository userRepository;
     private final SstsRoleRepository roleRepository;
-    private final SstsUserProfileRepository profileRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ParentService parentService;
 
     public LoginService(SstsUserRepository userRepository, SstsRoleRepository roleRepository,
-                        SstsUserProfileRepository profileRepository, PasswordEncoder passwordEncoder) {
+                        PasswordEncoder passwordEncoder, ParentService parentService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.profileRepository = profileRepository;
         this.passwordEncoder = passwordEncoder;
+        this.parentService = parentService;
     }
 
     @Transactional
@@ -46,17 +44,6 @@ public class LoginService {
         var auth = new UsernamePasswordAuthenticationToken(user, password, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(auth);
         return true;
-    }
-
-    public String redirectBasedOnUserType(Long userId) {
-        var user = userRepository.findById(userId).orElse(null);
-        if (user == null) return "/";
-
-        return switch (user.getUserType().toLowerCase()) {
-            case "admin", "staff" -> "/admin/dashboard";
-            case "volunteer" -> "/volunteer/dashboard";
-            default -> "/parent/dashboard";
-        };
     }
 
     @Transactional
@@ -83,29 +70,27 @@ public class LoginService {
         user.setReceiveNewsletter(request.isReceiveNewsletter());
         user.setReceiveVolunteerUpdates(request.isReceiveVolunteerUpdates());
 
+        // The user row carries IDENTITY and PERSON facts only. The contact block
+        // (phone, address) is deliberately NOT set here: for user_type='parent'
+        // that data belongs to the household in ssts_families, and
+        // UserAdminService.copyPerPersonFields already refuses to write it on the
+        // admin path. Setting it here too is what let the two paths disagree.
+        // Everything below is a property of the PERSON, not the household.
+        user.setAlternateEmail(request.getAlternateEmail());
+        user.setBio(request.getBio());
+        user.setOccupation(request.getOccupation());
+        user.setEmployer(request.getEmployer());
+        user.setYearsInCommunity(request.getYearsInCommunity());
+        user.setPriorEducation(request.getPriorEducation());
+        user.setPriorTamilExperience(request.getPriorTamilExperience());
+        user.setPriorVolunteerExperience(request.getPriorVolunteerExperience());
+        user.setInterests(request.getInterests());
+
         SstsUser saved = userRepository.save(user);
 
-        SstsUserProfile profile = new SstsUserProfile();
-        profile.setUser(saved);
-        profile.setPhone(request.getPhone());
-        profile.setAlternateEmail(request.getAlternateEmail());
-        profile.setAddressLine1(request.getAddressLine1());
-        profile.setAddressLine2(request.getAddressLine2());
-        profile.setCity(request.getCity());
-        profile.setState(request.getState());
-        profile.setZipCode(request.getZipCode());
-        profile.setCountry(request.getCountry());
-        profile.setBio(request.getBio());
-        profile.setOccupation(request.getOccupation());
-        profile.setEmployer(request.getEmployer());
-        profile.setYearsInCommunity(request.getYearsInCommunity());
-        profile.setPriorEducation(request.getPriorEducation());
-        profile.setPriorTamilExperience(request.getPriorTamilExperience());
-        profile.setPriorTeachingExperience(request.getPriorTeachingExperience());
-        profile.setPriorVolunteerExperience(request.getPriorVolunteerExperience());
-        profile.setCertifications(request.getCertifications());
-        profile.setInterests(request.getInterests());
-        profileRepository.save(profile);
+        // Same transaction: a parent account without a family is the state every
+        // previously-registered parent was left in, because nothing created one.
+        parentService.createFamilyForNewParent(saved, request);
 
         return saved;
     }

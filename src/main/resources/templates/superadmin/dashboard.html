@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Super Admin | SSTS</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+    <link rel="stylesheet" th:href="@{/css/levels.css}" />
+    <link rel="stylesheet" th:href="@{/css/donors.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+  </head>
+
+  <body class="school-home">
+    <section class="donor-marquee" aria-label="">
+      <div class="marquee-track"></div>
+    </section>
+    <header th:replace="~{fragments/nav :: nav}"></header>
+
+    <main>
+      <section class="intro-section wrap">
+        <div class="page-heading">
+          <p class="eyebrow accent">SUPER ADMIN</p>
+          <h1 th:text="'Welcome, ' + ${user.fullName}">Super Admin</h1>
+          <p>Super-admin modules for content that appears on the public site. Changes publish immediately.</p>
+        </div>
+        <div class="cards">
+          <article>
+            <h3>Announcements</h3>
+            <p>Notices that scroll across the top of the public home page, with optional auto-expiry.</p>
+            <a th:href="@{/superadmin/announcements}" class="button">Manage Announcements</a>
+          </article>
+          <article>
+            <h3>Calendar Events</h3>
+            <p>Working days, holidays and breaks for the public school calendar.</p>
+            <a th:href="@{/superadmin/calendar}" class="button">Manage Calendar</a>
+          </article>
+          <article>
+            <h3>Gallery</h3>
+            <p>Photos and events shown in the public event gallery.</p>
+            <a th:href="@{/superadmin/gallery}" class="button">Manage Gallery</a>
+          </article>
+          <article>
+            <h3>Team Members</h3>
+            <p>Staff and volunteer cards on the public team page.</p>
+            <a th:href="@{/superadmin/team}" class="button">Manage Team</a>
+          </article>
+          <article>
+            <h3>Users</h3>
+            <p>General account administration -- the only screen where a user's role may be chosen.</p>
+            <a th:href="@{/superadmin/users}" class="button">Manage Users</a>
+          </article>
+          <article>
+            <h3>Roles</h3>
+            <p>The 21 can_* privilege flags that gate what each role may do.</p>
+            <a th:href="@{/superadmin/roles}" class="button">Manage Roles</a>
+          </article>
+          <article>
+            <h3>Reports</h3>
+            <p>Read-only aggregate statistics, read live per request.</p>
+            <a th:href="@{/superadmin/reports}" class="button">View Reports</a>
+          </article>
+          <article>
+            <h3>Donors</h3>
+            <p>The education donors shown in the public home-page carousel, with their giving totals.</p>
+            <a th:href="@{/superadmin/donors}" class="button">Manage Donors</a>
+          </article>
+          <article>
+            <h3>Donations</h3>
+            <p>The gift ledger. Every total is summed from these rows, never stored.</p>
+            <a th:href="@{/superadmin/donations}" class="button">Record Donations</a>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong>
+        <span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+  </body>
+</html>

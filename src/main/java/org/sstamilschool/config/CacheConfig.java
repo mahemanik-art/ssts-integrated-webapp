@@ -19,15 +19,21 @@ public class CacheConfig {
 
     public static final String TEAM_MEMBERS = "teamMembers";
     public static final String CALENDAR_EVENTS = "calendarEvents";
+    public static final String GALLERY_EVENTS = "galleryEvents";
+    public static final String DONORS = "donors";
 
     @Bean
     public CacheManager cacheManager(
             @Value("${app.cache.team-ttl-hours:24}") long teamTtlHours,
-            @Value("${app.cache.calendar-ttl-hours:24}") long calendarTtlHours) {
+            @Value("${app.cache.calendar-ttl-hours:24}") long calendarTtlHours,
+            @Value("${app.cache.gallery-ttl-hours:24}") long galleryTtlHours,
+            @Value("${app.cache.donors-ttl-hours:24}") long donorsTtlHours) {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(List.of(
                 caffeineCache(TEAM_MEMBERS, teamTtlHours),
-                caffeineCache(CALENDAR_EVENTS, calendarTtlHours)));
+                caffeineCache(CALENDAR_EVENTS, calendarTtlHours),
+                caffeineCache(GALLERY_EVENTS, galleryTtlHours),
+                caffeineCache(DONORS, donorsTtlHours)));
         return cacheManager;
     }
 

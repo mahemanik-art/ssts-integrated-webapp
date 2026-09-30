@@ -1,7 +1,9 @@
 /* Featured donor cards beside the hero image slider */
 .hero-visual {
   display: flex;
-  align-items: stretch;
+  /* Both children carry align-self: center, so this only decides the fallback
+     for anything else added to the row. */
+  align-items: center;
   justify-content: center;
   gap: clamp(28px, 3.5vw, 52px);
   padding: 0 clamp(20px, 3vw, 64px) clamp(20px, 3vh, 40px);
@@ -10,16 +12,27 @@
   flex: 0 1 75%;
   width: auto;
   min-width: 0;
-  align-self: stretch;
+  /* Centre, not stretch. hero-full.css gives the slider a definite height
+     (calc() off the viewport), and a definite height makes align-self: stretch a
+     no-op -- the slider would sit at the TOP of the flex line while the taller
+     donor column filled it, leaving the two centres offset by half the
+     difference. Both panels are centred instead, so their centres coincide no
+     matter which one is taller. */
+  align-self: center;
 }
 .donor-cards {
   flex: 0 0 auto;
   width: min(252px, 23vw);
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   z-index: 4;
-  margin-top: -40px;
+  /* Centred against the hero slider. This replaces a margin-top: -40px fudge
+     that pushed the panel up by hand and left it visibly out of alignment with
+     the image slider. align-self beats the parent's align-items: stretch, so
+     the panel keeps its own natural height and simply sits centred next to the
+     stretched slider. */
+  align-self: center;
 }
 .donor-cards-header {
   display: flex;
@@ -46,6 +59,37 @@
   gap: 8px;
   box-shadow: 8px 8px 0 rgba(4, 16, 30, 0.45);
   overflow: hidden;
+
+  /* FIXED height, so rotating between donors cannot resize the column. But the
+     number is TIGHT, not generous: an earlier revision budgeted the worst case
+     of a 2-line name AND a 2-line tagline, which left ~39px of dead space below
+     the link on a typical donor and made the three-card column (3 x 288 = 962px)
+     taller than the hero slider it sits beside, so it could not be centred at
+     all.
+
+     252px, worst case first. The name is clamped to ONE line and the tagline
+     to TWO, because that is what the real donor data needs: of the nine seeded
+     donors, EIGHT taglines fit on one line but one -- "Human resources
+     consulting services", 35 characters -- needs two. Budgeting for a single
+     tagline line instead would ellipsis that donor's real text; budgeting for a
+     two-line NAME as well (the previous 288px revision) reserved 20px that no
+     current donor uses, and 3 x 288 also made the column too tall to centre.
+
+       padding            10 top + 10 bottom           = 20
+       .donor-photo       132 + 1px border top/bottom  = 134
+       gap                                           =   8
+       .donor-name        1.05rem x 1.2 -> 20.2 x 1    = 20
+       grid gap                                     =   4
+       .donor-biz         0.82rem x 1.4 -> 18.4 x 2    = 37
+       grid gap                                     =   4
+       .donor-link        ~0.72rem + margin + border  = 21
+                                     + card borders   =   2
+                                             TOTAL   = 250, +2 slack = 252
+     The remaining ~19px of variance is that one long tagline, and it is
+     deliberate: it is real content, not noise. .donor-info centres it, so the
+     eight short cards get ~10px above the name and ~10px below the link and read
+     as padded rather than as a hole. If you change a font-size, recompute. */
+  height: 252px;
 }
 /* Only the card contents slide/fade during rotation - the card frame stays put */
 .donor-card .donor-photo,
@@ -61,7 +105,11 @@
 }
 .donor-card .donor-photo {
   width: 100%;
-  height: 150px;
+  height: 132px;
+  /* Never let flex shrink the photo block: the card height above is budgeted
+     around a full-size 132px photo, and the fallback initials tile inherits
+     this too, so a photo-less donor keeps an identical card. */
+  flex: 0 0 132px;
   border-radius: 10px;
   object-fit: cover;
   border: 1px solid #4d91aa;
@@ -72,6 +120,13 @@
   gap: 4px;
   min-width: 0;
   text-align: left;
+  /* Absorbs whatever the fixed card height leaves over. Centred rather than
+     start-aligned, so a donor with a short tagline gets half its slack above
+     the name and half below the link instead of one lump of dead space at the
+     bottom of the card. */
+  flex: 1 1 auto;
+  min-height: 0;
+  align-content: center;
 }
 .donor-card .donor-label {
   font-size: 0.64rem;
@@ -86,11 +141,21 @@
   font-size: 1.05rem;
   line-height: 1.2;
   color: #f0f9fb;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
+  overflow: hidden;
 }
 .donor-card .donor-biz {
   font-size: 0.82rem;
   line-height: 1.4;
   color: #b9d0d5;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 .donor-card .donor-link {
   margin-top: 2px;
@@ -141,4 +206,98 @@
     flex-direction: column;
     align-items: center;
   }
+}
+
+/* Donor card with no logo. Reuses the .donor-photo box so the card keeps the
+   same 150px height as its siblings -- without it a photo-less donor renders
+   as a visibly stubby card. The gradient mirrors team.html's
+   .team-photo-fallback so the two pages read as the same design system. */
+.donor-card .donor-photo--fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  font-weight: 600;
+  line-height: 1;
+  color: #d8eef7;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, #0f4c6b 0%, #16697a 55%, #1b7f79 100%);
+}
+
+/* ---------------------------------------------------------------------
+   Donor carousel controls.
+
+   The panel shows a fixed three-card window and rotates through the rest,
+   so the narrow column beside the hero slider keeps its original height
+   no matter how many donors the school has. Mirrors the hero slider's
+   .slider-nav / .slider-dots treatment in hero-full.css (gold on navy) so
+   the two carousels read as one component.
+   --------------------------------------------------------------------- */
+.donor-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 4px;
+}
+.donor-nav-btn {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid #ffcf45;
+  background: rgba(6, 27, 51, 0.72);
+  color: #ffcf45;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+.donor-nav-btn:hover,
+.donor-nav-btn:focus-visible {
+  background: #ffcf45;
+  color: #08223d;
+}
+.donor-dots {
+  display: flex;
+  gap: 7px;
+}
+.donor-dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid #4d91aa;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+.donor-dot.active {
+  background: #ffcf45;
+  border-color: #ffcf45;
+}
+.donor-dot:focus-visible,
+.donor-nav-btn:focus-visible {
+  outline: 2px solid #70d6c7;
+  outline-offset: 2px;
+}
+
+/* The arrow glyphs are the button's text, so hide them from assistive tech --
+   each button already carries an aria-label describing its action. */
+.donor-nav-btn {
+  font-size: 0;
+}
+.donor-nav-btn::before {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+.donor-nav-btn[data-donor-prev]::before {
+  content: "\2039";
+}
+.donor-nav-btn[data-donor-next]::before {
+  content: "\203A";
 }

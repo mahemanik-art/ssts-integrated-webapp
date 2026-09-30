@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit Gallery Entry | Super Admin | SSTS</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+    <link rel="stylesheet" th:href="@{/css/levels.css}" />
+    <link rel="stylesheet" th:href="@{/css/donors.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+  </head>
+
+  <body class="school-home">
+    <section class="donor-marquee" aria-label="">
+      <div class="marquee-track"></div>
+    </section>
+    <header th:replace="~{fragments/nav :: nav}"></header>
+
+    <main>
+      <section class="intro-section wrap">
+        <div class="page-heading">
+          <h1 th:text="${event.id != null} ? 'Edit entry' : 'New entry'">Edit entry</h1>
+          <p>
+            Fields mirror the public /gallery card exactly: photo, title, date and description. Display order pins an
+            entry to the front, and the active flag controls whether it is shown at all.
+          </p>
+        </div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <form
+          th:action="${event.id != null} ? @{/superadmin/gallery/{id}(id=${event.id})} : @{/superadmin/gallery}"
+          method="post"
+          enctype="multipart/form-data"
+          class="admin-form"
+        >
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" th:value="${event.title}" required maxlength="255" />
+          </div>
+
+          <div class="form-group">
+            <label for="eventDate">Date</label>
+            <input type="date" id="eventDate" name="eventDate" th:value="${event.eventDate}" required />
+            <small>Rendered on the public card as the month and year.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="images">Photos (add multiple)</label>
+            <input type="file" id="images" name="images" multiple accept="image/*" />
+            <small>
+              Every uploaded file goes into this event's own folder under
+              <code>static/images/gallery/</code> (folder name is the title, slugified, plus the entry id — e.g.
+              <code>pongal-celebration-12/</code>). The first upload becomes the card's cover photo and all uploads
+              become the card's hover slider, in the order selected here. Upload again later to append more.
+            </small>
+          </div>
+
+          <div class="form-group" th:if="${event.slides != null and !event.slides.isEmpty()}">
+            <label>Uploaded photos (slider order)</label>
+            <div class="gallery-slides-preview">
+              <img
+                th:each="slide : ${event.slides}"
+                th:src="@{${slide}}"
+                alt="Slider photo"
+                style="width: 110px; height: 70px; border-radius: 6px; object-fit: cover"
+              />
+            </div>
+            <small th:if="${folderName != null}">
+              Folder on disk: <code th:text="'src/main/resources/static/images/gallery/' + ${folderName}"></code>
+            </small>
+          </div>
+
+          <div class="form-group">
+            <label for="imageUrl">Cover photo path (optional)</label>
+            <input
+              type="text"
+              id="imageUrl"
+              name="imageUrl"
+              th:value="${event.imageUrl}"
+              maxlength="500"
+              placeholder="/images/gallery/pongal.jpg"
+            />
+            <small>
+              Path of the photo shown as the card's default frame. Uploads fill this automatically; you can also type a
+              path to a file committed under <code>src/main/resources/static/images/gallery/</code> by hand. Leave blank
+              and the card shows the first letter of the title.
+            </small>
+          </div>
+
+          <div class="form-group" th:if="${event.imageUrl != null and !event.imageUrl.isEmpty()}">
+            <label>Cover photo</label>
+            <img
+              th:src="@{${event.imageUrl}}"
+              th:alt="${'Photo from ' + event.title}"
+              style="width: 220px; height: 130px; border-radius: 8px; object-fit: cover"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" th:text="${event.description}"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="displayOrder">Display order</label>
+            <input
+              type="number"
+              id="displayOrder"
+              name="displayOrder"
+              th:value="${event.displayOrder}"
+              min="0"
+              max="9999"
+              step="1"
+            />
+            <small>Lower numbers appear first. Ties fall back to newest date first.</small>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" name="active" th:checked="${event.active}" />
+              Active (shown on the public gallery)
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="button" th:text="${event.id != null} ? 'Save changes' : 'Create entry'">
+              Save
+            </button>
+            <a th:href="@{/superadmin/gallery}" class="button secondary">Cancel</a>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong>
+        <span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,433 @@
+/* Shared super-admin tables, forms and alerts (calendar + team) */
+
+.alert {
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.alert-success {
+  background: rgba(112, 214, 199, 0.15);
+  color: #a6eee4;
+  border: 1px solid #a6eee4;
+}
+
+.alert-error {
+  background: rgba(213, 66, 45, 0.15);
+  color: #f3a833;
+  border: 1px solid #f3a833;
+}
+
+.admin-toolbar {
+  margin-bottom: 1.25rem;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.9rem;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 0.55rem 0.7rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: left;
+  vertical-align: top;
+  white-space: normal;
+}
+
+.admin-table td {
+  overflow-wrap: break-word;
+}
+
+.admin-table th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow-wrap: normal;
+}
+
+.admin-table .actions {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.admin-table .actions a {
+  color: #ffcf45;
+  text-decoration: underline;
+}
+
+.admin-table .delete-button {
+  background: none;
+  border: none;
+  color: #f3a833;
+  text-decoration: underline;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+
+.admin-table .inline-delete {
+  display: inline;
+}
+
+.admin-form {
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.admin-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.admin-form label {
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #b9c5c8;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  background: #0f2029;
+  color: #edf7fb;
+}
+
+.admin-form .checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 400;
+}
+
+.admin-form .checkbox-group input {
+  width: auto;
+}
+
+.admin-form .form-actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.admin-form .button.secondary {
+  background: transparent;
+  color: #fff6e6;
+  border: 2px solid #ffcf45;
+}
+
+.admin-form .button.secondary:hover {
+  background: rgba(255, 207, 69, 0.12);
+  color: #ffcf45;
+  border-color: #ffcf45;
+}
+
+/* The super-admin screens are full-width data views, not two-column prose.
+   school-template.css sets .intro-section to a 0.9fr 1.1fr grid with a 90px
+   gap, which reserves a second column that nothing on these pages can use --
+   every child escapes with grid-column: 1 / -1 except the flash-message
+   alerts, which sit alone in column 1 beside ~55% dead space. admin.css is
+   linked only by the admin/super-admin templates, so collapsing it here
+   leaves the public pages' two-column layout untouched. */
+.intro-section {
+  grid-template-columns: 1fr;
+  gap: 38px;
+}
+
+/* Super-admin list tables sit inside .intro-section. .admin-toolbar and
+   .admin-table are direct children, and .page-heading already uses the same
+   grid-column escape. Since the grid above is now a single column, these
+   escapes are harmless no-ops above the mobile breakpoint; they are kept
+   deliberately and must NOT be removed -- school-template.css's
+   max-width: 760px block still relies on the two-column fallback if this
+   override is ever scoped away. */
+.intro-section > .admin-toolbar,
+.intro-section > .admin-table {
+  grid-column: 1 / -1;
+}
+
+/* Super-admin dashboard cards sit inside .intro-section. The .cards grid is a
+   direct child, so give it the full single column above and switch to auto-fit
+   so the number of cards per row responds to the available width (7 cards on
+   /superadmin). The gap from site.css is inherited.
+   This rule reaches superadmin/dashboard.html, which links admin.css. */
+.intro-section > .cards {
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+/* Card button alignment: make each article a vertical flex stack so the
+   .button link sits at the bottom of the equal-height grid cell.
+   margin-top: auto absorbs leftover space; align-self: flex-start keeps
+   the button at its natural width instead of stretching cross-axis. */
+.intro-section > .cards article {
+  display: flex;
+  flex-direction: column;
+}
+
+.intro-section > .cards article .button {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+/* Per-module column widths. With table-layout: fixed above, the first row
+   (thead th cells) establishes column widths, so these nth-child rules take
+   effect. The single wide free-text column gets ~35-45% in each table. */
+.admin-table--calendar th:nth-child(1) {
+  width: 9%;
+}
+.admin-table--calendar th:nth-child(2) {
+  width: 9%;
+}
+.admin-table--calendar th:nth-child(3) {
+  width: 9%;
+}
+.admin-table--calendar th:nth-child(4) {
+  width: 12%;
+}
+.admin-table--calendar th:nth-child(5) {
+  width: 36%;
+}
+.admin-table--calendar th:nth-child(6) {
+  width: 8%;
+}
+.admin-table--calendar th:nth-child(7) {
+  width: 8%;
+}
+.admin-table--calendar th:nth-child(8) {
+  width: 9%;
+}
+
+.admin-table--team th:nth-child(1) {
+  width: 6%;
+}
+.admin-table--team th:nth-child(2) {
+  width: 14%;
+}
+.admin-table--team th:nth-child(3) {
+  width: 14%;
+}
+.admin-table--team th:nth-child(4) {
+  width: 10%;
+}
+.admin-table--team th:nth-child(5) {
+  width: 37%;
+}
+.admin-table--team th:nth-child(6) {
+  width: 7%;
+}
+.admin-table--team th:nth-child(7) {
+  width: 12%;
+}
+
+.admin-table--gallery th:nth-child(1) {
+  width: 8%;
+}
+.admin-table--gallery th:nth-child(2) {
+  width: 15%;
+}
+.admin-table--gallery th:nth-child(3) {
+  width: 11%;
+}
+.admin-table--gallery th:nth-child(4) {
+  width: 36%;
+}
+.admin-table--gallery th:nth-child(5) {
+  width: 8%;
+}
+.admin-table--gallery th:nth-child(6) {
+  width: 7%;
+}
+.admin-table--gallery th:nth-child(7) {
+  width: 15%;
+}
+
+/* Columns 5 (Active) and 6 (Showing) are the two boolean flags. They were
+   widened from 6% each because .admin-table th applies text-transform:
+   uppercase plus letter-spacing: 0.08em, which makes a single word like
+   SHOWING wrap onto a second line at 6% of the table width. Keep these
+   widths in step with the header order in superadmin/announcements/list.html. */
+.admin-table--announcements th:nth-child(1) {
+  width: 15%;
+}
+.admin-table--announcements th:nth-child(2) {
+  width: 27%;
+}
+.admin-table--announcements th:nth-child(3) {
+  width: 13%;
+}
+.admin-table--announcements th:nth-child(4) {
+  width: 11%;
+}
+.admin-table--announcements th:nth-child(5) {
+  width: 9%;
+}
+.admin-table--announcements th:nth-child(6) {
+  width: 10%;
+}
+.admin-table--announcements th:nth-child(7) {
+  width: 15%;
+}
+
+/* users, roles and reports modules -- column orders are tied to their
+   templates, do not reorder the headers without updating these widths. */
+
+.admin-table--users th:nth-child(1) {
+  width: 16%;
+}
+.admin-table--users th:nth-child(2) {
+  width: 12%;
+}
+.admin-table--users th:nth-child(3) {
+  width: 20%;
+}
+.admin-table--users th:nth-child(4) {
+  width: 9%;
+}
+.admin-table--users th:nth-child(5) {
+  width: 13%;
+}
+.admin-table--users th:nth-child(6) {
+  width: 12%;
+}
+.admin-table--users th:nth-child(7) {
+  width: 18%;
+}
+
+.admin-table--roles th:nth-child(1) {
+  width: 18%;
+}
+.admin-table--roles th:nth-child(2) {
+  width: 38%;
+}
+.admin-table--roles th:nth-child(3) {
+  width: 18%;
+}
+.admin-table--roles th:nth-child(4) {
+  width: 10%;
+}
+.admin-table--roles th:nth-child(5) {
+  width: 16%;
+}
+
+/* reports uses the same single set of widths across several tables that have
+   two or three columns. Declared widths sum to 100% for the 3-column tables;
+   for a 2-column table they sum to 80%, and under table-layout: fixed the
+   remaining 20% is distributed across the two present columns (about 70/30),
+   which is what Metric/Count and Role/Assigned-users want -- leave it as is. */
+.admin-table--reports th:nth-child(1) {
+  width: 60%;
+}
+.admin-table--reports th:nth-child(2) {
+  width: 20%;
+}
+.admin-table--reports th:nth-child(3) {
+  width: 20%;
+}
+
+@media (max-width: 760px) {
+  /* intro-section collapses to one column here (school-template.css);
+     switch the table to auto layout and let it scroll horizontally instead
+     of crushing wide text into a single mobile column. */
+  .intro-section > .admin-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    table-layout: auto;
+  }
+}
+
+/* ---------------------------------------------------------------- donors */
+/* Column order is a CONTRACT with superadmin/donors/list.html: reordering a
+   <th> silently hands the wrong width to the wrong data. Keep in step. */
+.admin-table--donors th:nth-child(1) {
+  width: 8%;
+} /* Photo   */
+.admin-table--donors th:nth-child(2) {
+  width: 16%;
+} /* Name    */
+.admin-table--donors th:nth-child(3) {
+  width: 18%;
+} /* Tagline */
+.admin-table--donors th:nth-child(4) {
+  width: 10%;
+} /* Website */
+.admin-table--donors th:nth-child(5) {
+  width: 12%;
+} /* Total   */
+.admin-table--donors th:nth-child(6) {
+  width: 7%;
+} /* Order   */
+.admin-table--donors th:nth-child(7) {
+  width: 9%;
+} /* Public  */
+.admin-table--donors th:nth-child(8) {
+  width: 9%;
+} /* Active  */
+.admin-table--donors th:nth-child(9) {
+  width: 11%;
+} /* Actions */
+
+/* ------------------------------------------------------------- donations */
+/* 7 columns, matching superadmin/donations/list.html. */
+.admin-table--donations th:nth-child(1) {
+  width: 12%;
+} /* Date      */
+.admin-table--donations th:nth-child(2) {
+  width: 18%;
+} /* Donor     */
+.admin-table--donations th:nth-child(3) {
+  width: 12%;
+} /* Amount    */
+.admin-table--donations th:nth-child(4) {
+  width: 11%;
+} /* Method    */
+.admin-table--donations th:nth-child(5) {
+  width: 13%;
+} /* Reference */
+.admin-table--donations th:nth-child(6) {
+  width: 20%;
+} /* Notes     */
+.admin-table--donations th:nth-child(7) {
+  width: 14%;
+} /* Actions   */
+
+/* The ledger's Total row. .admin-table th is uppercase + letter-spaced, which
+   the money figure must not inherit, and the figure is right-aligned so the
+   decimal points line up down the column. */
+.admin-table--donations tfoot th {
+  text-transform: none;
+  letter-spacing: normal;
+}
+.admin-table--donations tbody td:nth-child(3),
+.admin-table--donations tfoot th:nth-child(3) {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Small hint text used on the donors/donations toolbars and forms to explain a
+   disabled upload bucket or the two-step photo upload. */
+.admin-hint {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  align-self: center;
+}
+.donor-empty {
+  opacity: 0.7;
+  font-style: italic;
+}

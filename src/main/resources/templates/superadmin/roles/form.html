@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit Role | Super Admin | SSTS</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+    <link rel="stylesheet" th:href="@{/css/levels.css}" />
+    <link rel="stylesheet" th:href="@{/css/donors.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+  </head>
+
+  <body class="school-home">
+    <section class="donor-marquee" aria-label="">
+      <div class="marquee-track"></div>
+    </section>
+    <header th:replace="~{fragments/nav :: nav}"></header>
+
+    <main>
+      <section class="intro-section wrap">
+        <div class="page-heading">
+          <h1 th:text="${role.id != null} ? 'Edit role' : 'New role'">Edit role</h1>
+          <p>
+            The role name becomes the Spring Security authority <code>ROLE_&lt;NAME&gt;</code> (uppercased). It must be
+            lowercase letters, digits, and underscores only, starting with a letter. The <code>super_admin</code> role
+            is protected and all its fields are immutable.
+          </p>
+        </div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <form
+          th:action="${role.id != null} ? @{/superadmin/roles/{id}(id=${role.id})} : @{/superadmin/roles}"
+          method="post"
+          class="admin-form"
+        >
+          <div class="form-group" th:if="${role.id == null}">
+            <label for="name">Role name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              th:value="${role.name}"
+              required
+              pattern="[a-z][a-z0-9_]*"
+              maxlength="50"
+              placeholder="teacher_coordinator"
+            />
+            <small>
+              The name is uppercased into the Spring Security authority <code>ROLE_&lt;NAME&gt;</code>. Use only
+              lowercase letters, digits, and underscores; must start with a letter. This name is immutable after
+              creation.
+            </small>
+          </div>
+
+          <div class="form-group" th:if="${role.id != null}">
+            <label>Role name</label>
+            <input type="text" th:value="${role.name}" disabled />
+            <small>The role name is immutable after creation.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <input
+              type="text"
+              id="description"
+              name="description"
+              th:value="${role.description}"
+              maxlength="255"
+              placeholder="Can manage teacher assignments and view reports"
+            />
+          </div>
+
+          <h3>User management</h3>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canCreateUsers"
+                th:checked="${role.canCreateUsers}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Create users
+            </label>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canEditUsers"
+                th:checked="${role.canEditUsers}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Edit users
+            </label>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canDeleteUsers"
+                th:checked="${role.canDeleteUsers}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Delete users
+            </label>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canViewUsers"
+                th:checked="${role.canViewUsers}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              View users
+            </label>
+          </div>
+
+          <h3>Content management</h3>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canManageContent"
+                th:checked="${role.canManageContent}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Manage content
+            </label>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canEditPages"
+                th:checked="${role.canEditPages}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Edit pages
+            </label>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canPublishContent"
+                th:checked="${role.canPublishContent}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Publish content
+            </label>
+          </div>
+
+          <h3>Class/Level management</h3>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canManageLevels"
+                th:checked="${role.canManageLevels}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Manage levels
+            </label>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canManageClasses"
+                th:checked="${role.canManageClasses}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Manage classes
+            </label>
+          </div>
+
+          <h3>Donor management</h3>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canManageDonors"
+                th:checked="${role.canManageDonors}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Manage donors
+            </label>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canViewDonors"
+                th:checked="${role.canViewDonors}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              View donors
+            </label>
+          </div>
+
+          <h3>Calendar & Events</h3>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canManageEvents"
+                th:checked="${role.canManageEvents}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Manage events
+            </label>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canViewCalendar"
+                th:checked="${role.canViewCalendar}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              View calendar
+            </label>
+          </div>
+
+          <h3>Volunteer management</h3>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canManageVolunteers"
+                th:checked="${role.canManageVolunteers}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Manage volunteers
+            </label>
+          </div>
+
+          <h3>Financial & Reporting</h3>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canViewFinancials"
+                th:checked="${role.canViewFinancials}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              View financials
+            </label>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canViewReports"
+                th:checked="${role.canViewReports}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              View reports
+            </label>
+          </div>
+
+          <h3>System settings</h3>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canManageSettings"
+                th:checked="${role.canManageSettings}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Manage settings
+            </label>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canViewAuditLogs"
+                th:checked="${role.canViewAuditLogs}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              View audit logs
+            </label>
+          </div>
+
+          <h3>Communication</h3>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canSendAnnouncements"
+                th:checked="${role.canSendAnnouncements}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Send announcements
+            </label>
+          </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canSendNewsletters"
+                th:checked="${role.canSendNewsletters}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Send newsletters
+            </label>
+          </div>
+
+          <h3>Dashboard</h3>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="canViewDashboard"
+                th:checked="${role.canViewDashboard}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              View dashboard
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                name="active"
+                th:checked="${role.active}"
+                th:disabled="${role.name == 'super_admin'}"
+              />
+              Active
+            </label>
+          </div>
+
+          <div th:if="${role.name == 'super_admin'}" class="alert alert-error">
+            The <code>super_admin</code> role is immutable because it is the sole source of the
+            <code>ROLE_SUPER_ADMIN</code>
+            authority. Its privilege flags and active status cannot be changed.
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="button" th:text="${role.id != null} ? 'Save changes' : 'Create role'">
+              Save
+            </button>
+            <a th:href="@{/superadmin/roles}" class="button secondary">Cancel</a>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong>
+        <span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Event Gallery | Sandy Springs Tamil School</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+    <link rel="stylesheet" th:href="@{/css/gallery.css}" />
+  </head>
+
+  <body class="school-home">
+    <section class="donor-marquee" aria-label="">
+      <div class="marquee-track"></div>
+    </section>
+    <header th:replace="~{fragments/nav :: nav}"></header>
+    <main class="inner gallery-main">
+      <section class="wrap page-hero">
+        <p class="eyebrow accent">Event gallery</p>
+        <h1>Moments from our school year</h1>
+        <p>
+          Pongal, Deepavali, annual day performances, and everyday classroom joy. Move your mouse over an event to bring
+          it to the center, or push toward the edges of the screen to glide along the gallery.
+        </p>
+      </section>
+
+      <section class="gallery-stage" id="galleryStage" aria-label="Event gallery">
+        <!-- Strip arrows: fixed at the stage edges, scroll the card strip. -->
+        <button type="button" class="strip-arrow strip-arrow--prev" aria-label="Scroll gallery left">&#10094;</button>
+        <button type="button" class="strip-arrow strip-arrow--next" aria-label="Scroll gallery right">&#10095;</button>
+        <div class="gallery-track" id="galleryTrack">
+          <article
+            class="event-card"
+            th:each="event : ${events}"
+            th:with="cover=${event.imageUrl != null and !event.imageUrl.isEmpty() ? event.imageUrl : null}, uploaded=${event.slides}, slideList=${!uploaded.isEmpty() ? uploaded : (cover != null ? {cover} : null)}"
+          >
+            <!-- Slide stack: uploads first, or the single cover path, otherwise
+                 the gradient + first-letter fallback, matching the team card's
+                 .team-photo-fallback pattern. -->
+            <div class="event-media" th:style="${slideList == null} ? '--event-hue:' + ${(event.id * 47) % 360} : null">
+              <div class="event-slides" th:if="${slideList != null}">
+                <img
+                  th:each="slide, st : ${slideList}"
+                  class="event-photo slide"
+                  th:classappend="${st.first} ? 'slide--active'"
+                  th:src="@{${slide}}"
+                  th:alt="${'Photo from ' + event.title}"
+                  loading="lazy"
+                />
+              </div>
+              <span
+                th:if="${slideList == null}"
+                class="event-fallback"
+                th:text="${#strings.substring(event.title, 0, 1)}"
+                >P</span
+              >
+              <!-- Hover-revealed arrows: left/right to page through the card's
+                   photos. No-op when there is only one photo. -->
+              <button
+                th:if="${slideList != null}"
+                type="button"
+                class="slide-arrow slide-arrow--prev"
+                aria-label="Previous photo"
+              >
+                &#10094;
+              </button>
+              <button
+                th:if="${slideList != null}"
+                type="button"
+                class="slide-arrow slide-arrow--next"
+                aria-label="Next photo"
+              >
+                &#10095;
+              </button>
+              <span class="slide-count" th:if="${slideList != null}">1</span>
+            </div>
+            <div class="event-body">
+              <p class="event-date" th:text="${#temporals.format(event.eventDate, 'MMMM yyyy')}">Month Year</p>
+              <h2 th:text="${event.title}">Title</h2>
+              <p th:text="${event.description}">Description</p>
+            </div>
+          </article>
+        </div>
+        <div class="gallery-hint">◀ hover the arrows to scroll ▶</div>
+        <p class="gallery-empty" th:if="${#lists.isEmpty(events)}">
+          New photos from our events are coming soon. Please check back!
+        </p>
+      </section>
+    </main>
+
+    <!-- Click-a-card lightbox: large slider of that event's photos. -->
+    <div class="gallery-lightbox" id="galleryLightbox" hidden>
+      <button type="button" class="lightbox-close" aria-label="Close">&#10005;</button>
+      <button type="button" class="lightbox-arrow lightbox-arrow--prev" aria-label="Previous photo">&#10094;</button>
+      <figure class="lightbox-figure">
+        <img id="lightboxImage" src="" alt="" />
+        <figcaption class="lightbox-caption">
+          <span class="lightbox-title"></span>
+          <span class="lightbox-counter"></span>
+        </figcaption>
+      </figure>
+      <button type="button" class="lightbox-arrow lightbox-arrow--next" aria-label="Next photo">&#10095;</button>
+    </div>
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong
+        ><span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+    <script th:src="@{/js/gallery.js}" defer></script>
+  </body>
+</html>

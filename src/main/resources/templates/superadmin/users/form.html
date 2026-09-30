@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit User | Super Admin | SSTS</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+    <link rel="stylesheet" th:href="@{/css/levels.css}" />
+    <link rel="stylesheet" th:href="@{/css/donors.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+  </head>
+
+  <body class="school-home">
+    <section class="donor-marquee" aria-label="">
+      <div class="marquee-track"></div>
+    </section>
+    <header th:replace="~{fragments/nav :: nav}"></header>
+
+    <main>
+      <section class="intro-section wrap">
+        <div class="page-heading">
+          <h1 th:text="${user.id != null} ? 'Edit user' : 'New user'">Edit user</h1>
+          <p>
+            This is the only screen where a role can be assigned. Active status, email verification and role changes
+            take effect immediately. Deactivating a user blocks login but keeps the record.
+          </p>
+        </div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <form
+          th:action="${user.id != null} ? @{/superadmin/users/{id}(id=${user.id})} : @{/superadmin/users}"
+          method="post"
+          class="admin-form"
+        >
+          <div class="form-group" th:if="${user.id == null}">
+            <label for="username">Username (login id)</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              th:value="${user.username}"
+              required
+              maxlength="50"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="form-group" th:if="${user.id == null}">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" th:value="${user.email}" required maxlength="100" />
+          </div>
+
+          <div class="form-group" th:if="${user.id == null}">
+            <label for="password">Initial password</label>
+            <input type="password" id="password" name="password" required minlength="12" autocomplete="new-password" />
+            <small>At least 12 characters. Enforced on the server too.</small>
+          </div>
+
+          <div class="form-group" th:if="${user.id != null}">
+            <label>Login</label>
+            <input type="text" th:value="${user.username} + ' / ' + ${user.email}" disabled />
+            <small>Username and email are login credentials; change them from the user record, not here.</small>
+          </div>
+
+          <div class="form-group" th:if="${user.id != null}">
+            <label for="username">Username (editable)</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              th:value="${user.username}"
+              required
+              maxlength="50"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="form-group" th:if="${user.id != null}">
+            <label for="email">Email (editable)</label>
+            <input type="email" id="email" name="email" th:value="${user.email}" required maxlength="100" />
+          </div>
+
+          <div class="form-group" th:if="${user.id != null}">
+            <label for="newPassword">Reset password (leave blank to keep current)</label>
+            <input type="password" id="newPassword" name="newPassword" minlength="12" autocomplete="new-password" />
+            <small>At least 12 characters. Leave blank to keep the current password.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="fullName">Full name</label>
+            <input type="text" id="fullName" name="fullName" th:value="${user.fullName}" required maxlength="100" />
+          </div>
+
+          <div class="form-group">
+            <label for="userType">User type</label>
+            <select id="userType" name="userType">
+              <option value="parent" th:selected="${user.userType == 'parent'}">Parent</option>
+              <option value="staff" th:selected="${user.userType == 'staff'}">Staff</option>
+              <option value="volunteer" th:selected="${user.userType == 'volunteer'}">Volunteer</option>
+              <option value="admin" th:selected="${user.userType == 'admin'}">Admin</option>
+            </select>
+            <small>Determines which dashboard the user sees on login.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="roleId">Role</label>
+            <select id="roleId" name="roleId">
+              <option
+                th:each="role : ${roles}"
+                th:value="${role.id}"
+                th:selected="${user.role != null and user.role.id == role.id}"
+                th:text="${role.name}"
+              ></option>
+            </select>
+            <small>The only screen in the app where a role can be chosen.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="designation">Designation</label>
+            <input
+              type="text"
+              id="designation"
+              name="designation"
+              th:value="${user.designation}"
+              maxlength="100"
+              placeholder="Class Teacher"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="dateOfBirth">Date of birth</label>
+            <input type="date" id="dateOfBirth" name="dateOfBirth" th:value="${user.dateOfBirth}" />
+          </div>
+
+          <div class="form-group">
+            <label for="yearsInCommunity">Years in community</label>
+            <input
+              type="number"
+              id="yearsInCommunity"
+              name="yearsInCommunity"
+              th:value="${user.yearsInCommunity}"
+              min="0"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="occupation">Occupation</label>
+            <input type="text" id="occupation" name="occupation" th:value="${user.occupation}" maxlength="100" />
+          </div>
+
+          <div class="form-group">
+            <label for="employer">Employer</label>
+            <input type="text" id="employer" name="employer" th:value="${user.employer}" maxlength="100" />
+          </div>
+
+          <div class="form-group">
+            <label for="department">Department</label>
+            <input
+              type="text"
+              id="department"
+              name="department"
+              th:value="${user.department}"
+              maxlength="100"
+              placeholder="Academics, Operations, Outreach"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="alternateEmail">Alternate email</label>
+            <input
+              type="email"
+              id="alternateEmail"
+              name="alternateEmail"
+              th:value="${user.alternateEmail}"
+              maxlength="100"
+            />
+          </div>
+
+          <div class="form-group" data-staff-contact>
+            <label for="phone">Phone</label>
+            <input type="text" id="phone" name="phone" th:value="${user.phone}" maxlength="20" />
+            <small class="form-hint-staff">
+              Staff, volunteer and admin only. A parent's contact details live on the family record.
+            </small>
+            <small class="form-hint-parent" hidden>
+              Not stored for parent accounts — ssts_families is the authoritative source for a parent's phone and
+              address.
+            </small>
+          </div>
+
+          <div class="form-group" data-staff-contact>
+            <label for="addressLine1">Address line 1</label>
+            <input type="text" id="addressLine1" name="addressLine1" th:value="${user.addressLine1}" maxlength="255" />
+          </div>
+
+          <div class="form-group" data-staff-contact>
+            <label for="addressLine2">Address line 2</label>
+            <input type="text" id="addressLine2" name="addressLine2" th:value="${user.addressLine2}" maxlength="255" />
+          </div>
+
+          <div class="form-group" data-staff-contact>
+            <label for="city">City</label>
+            <input type="text" id="city" name="city" th:value="${user.city}" maxlength="100" />
+          </div>
+
+          <div class="form-group" data-staff-contact>
+            <label for="state">State</label>
+            <input type="text" id="state" name="state" th:value="${user.state}" maxlength="50" />
+          </div>
+
+          <div class="form-group" data-staff-contact>
+            <label for="zipCode">Zip code</label>
+            <input type="text" id="zipCode" name="zipCode" th:value="${user.zipCode}" maxlength="20" />
+          </div>
+
+          <div class="form-group" data-staff-contact>
+            <label for="country">Country</label>
+            <input type="text" id="country" name="country" th:value="${user.country}" maxlength="50" />
+          </div>
+
+          <div class="form-group">
+            <label for="avatarUrl">Photo path</label>
+            <input
+              type="text"
+              id="avatarUrl"
+              name="avatarUrl"
+              th:value="${user.avatarUrl}"
+              maxlength="500"
+              placeholder="/images/teachers/teacher-01.jpg"
+            />
+            <small>A committed file under static/images, served at /images/... There is no upload.</small>
+          </div>
+
+          <div class="form-group">
+            <label for="bio">Bio</label>
+            <textarea id="bio" name="bio" rows="4" th:text="${user.bio}"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="certifications">Certifications</label>
+            <textarea id="certifications" name="certifications" rows="3" th:text="${user.certifications}"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="interests">Interests</label>
+            <textarea id="interests" name="interests" rows="2" th:text="${user.interests}"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="priorEducation">Prior education</label>
+            <textarea id="priorEducation" name="priorEducation" rows="2" th:text="${user.priorEducation}"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="priorTamilExperience">Prior Tamil experience</label>
+            <textarea
+              id="priorTamilExperience"
+              name="priorTamilExperience"
+              rows="2"
+              th:text="${user.priorTamilExperience}"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="priorTeachingExperience">Prior teaching experience</label>
+            <textarea
+              id="priorTeachingExperience"
+              name="priorTeachingExperience"
+              rows="2"
+              th:text="${user.priorTeachingExperience}"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="priorVolunteerExperience">Prior volunteer experience</label>
+            <textarea
+              id="priorVolunteerExperience"
+              name="priorVolunteerExperience"
+              rows="2"
+              th:text="${user.priorVolunteerExperience}"
+            ></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="joiningDate">Joining date</label>
+            <input type="date" id="joiningDate" name="joiningDate" th:value="${user.joiningDate}" />
+          </div>
+
+          <div class="form-group">
+            <label for="lastDate">Last date (optional)</label>
+            <input type="date" id="lastDate" name="lastDate" th:value="${user.lastDate}" />
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" name="active" th:checked="${user.active}" />
+              Active (can log in; deactivating blocks login but keeps the record)
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" name="emailVerified" th:checked="${user.emailVerified}" />
+              Email verified
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" name="receiveNewsletter" th:checked="${user.receiveNewsletter}" />
+              Receive newsletter
+            </label>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label>
+              <input type="checkbox" name="receiveVolunteerUpdates" th:checked="${user.receiveVolunteerUpdates}" />
+              Receive volunteer updates
+            </label>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="button" th:text="${user.id != null} ? 'Save changes' : 'Create user'">
+              Save
+            </button>
+            <a th:href="@{/superadmin/users}" class="button secondary">Cancel</a>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong>
+        <span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+    <script th:src="@{/js/user-form.js}"></script>
+  </body>
+</html>

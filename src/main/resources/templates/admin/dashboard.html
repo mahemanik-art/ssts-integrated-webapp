@@ -26,56 +26,24 @@
     <section class="donor-marquee" aria-label="">
       <div class="marquee-track"></div>
     </section>
-    <header class="template-header wrap">
-      <a href="/" class="header-logo">
-        <img th:src="@{/images/ssts-logo.png}" alt="Sandy Springs Tamil School logo" />
-      </a>
-      <nav aria-label="Main navigation">
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-        <a href="/calendar">Calendar</a>
-        <a href="/team">Our Team</a>
-        <a href="/contact">Contact</a>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/logout">Logout</a>
-      </nav>
-    </header>
+    <header th:replace="~{fragments/nav :: nav}"></header>
 
     <main>
-      <section class="template-hero wrap">
-        <div class="hero-heading">
+      <section class="intro-section wrap">
+        <!-- Greeting lives in this always-rendered block so non-super-admin admins still see the welcome text. -->
+        <div class="page-heading">
+          <p class="eyebrow accent">ADMIN PORTAL</p>
           <h1 th:text="'Welcome, ' + ${user.fullName}">Admin Dashboard</h1>
           <p th:text="${user.designation ?: 'School Administrator'}">School Administrator</p>
         </div>
-      </section>
-
-      <section class="intro-section wrap">
         <div>
-          <p class="eyebrow accent">ADMIN PORTAL</p>
           <h2>Manage the school</h2>
         </div>
-        <div class="dashboard-grid">
-          <div class="dashboard-card">
-            <h3>User Management</h3>
-            <p>Add, edit, or remove users and assign roles.</p>
-            <a href="/admin/users" class="button">Manage Users</a>
-          </div>
-          <div class="dashboard-card">
-            <h3>Role Management</h3>
-            <p>Configure role-based permissions.</p>
-            <a href="/admin/roles" class="button">Manage Roles</a>
-          </div>
-          <div class="dashboard-card">
-            <h3>Content Management</h3>
-            <p>Edit pages, announcements, and school content.</p>
-            <a href="/admin/content" class="button">Manage Content</a>
-          </div>
-          <div class="dashboard-card">
-            <h3>Reports</h3>
-            <p>View school statistics and reports.</p>
-            <a href="/admin/reports" class="button">View Reports</a>
-          </div>
-        </div>
+        <p>
+          Account-level administration (Users, Roles, Content, Reports) requires
+          <code>ROLE_SUPER_ADMIN</code> and is reachable from the Super Admin dropdown in the navigation. Plain admins,
+          staff and parents see this portal only.
+        </p>
       </section>
     </main>
 

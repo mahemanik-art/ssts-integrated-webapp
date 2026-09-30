@@ -30,6 +30,41 @@
 .template-header nav a.active {
   color: #9b4931;
 }
+/* Logout is a POST form (CSRF-protected), styled to match nav links.
+   padding is set explicitly because a <button> is not an <a>, so it does
+   not inherit welcoming-template.css's ".template-header nav a" padding.
+   .logout-form is display: contents, so the form contributes no box and the
+   button is a direct flex item of the nav.
+   The control is a <button>, so it never matches ".template-header nav a" and
+   therefore never receives the light-on-dark colours that fullscreen-dark.css
+   (stylesheet link 7, the cascade winner for the anchors) gives every anchor.
+   The old #1e2d31 / #9b4931 values were light-theme leftovers and were
+   effectively invisible on the #071118d9 header. The colours below are
+   deliberately duplicated from fullscreen-dark.css rather than inherited, so
+   that if that stylesheet's palette is ever changed, these four values must
+   be changed with it. */
+.template-header nav .logout-form {
+  display: contents;
+}
+.template-header nav .logout-button {
+  background: none;
+  border: none;
+  color: #dceced;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  font-family: inherit;
+  padding: 10px 17px;
+  cursor: pointer;
+}
+.template-header nav .logout-button:hover {
+  background: #183c4a;
+  color: #70d6c7;
+}
+.template-header nav .logout-button:focus-visible {
+  outline: 2px solid #e6b64d;
+  outline-offset: 2px;
+}
 .header-logo img {
   display: block;
   width: 260px;
@@ -124,6 +159,24 @@
 .intro-section span {
   font-family: "Noto Sans Tamil", sans-serif;
   color: #9b4931;
+}
+.page-heading {
+  grid-column: 1 / -1;
+}
+.page-heading h1 {
+  color: inherit;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin: 0;
+}
+.page-heading p {
+  color: inherit;
+  font-size: clamp(1rem, 2.2vw, 1.15rem);
+  line-height: 1.5;
+  margin: 14px 0 0;
 }
 .learning-section {
   padding: 90px 0;
@@ -295,6 +348,9 @@
   .template-header nav a:last-child {
     border: 0;
   }
+  .template-header nav .logout-button {
+    padding: 8px 10px;
+  }
   .school-home .donor-marquee {
     border-bottom: 0;
   }
@@ -356,4 +412,304 @@
     object-fit: contain;
     background: #dce9e3;
   }
+}
+
+/* ==========================================================================
+   Super Admin nav dropdown
+   --------------------------------------------------------------------------
+   The four super-admin module links live in a .nav-submenu <ul> inside the
+   .nav-superadmin wrapper (templates/fragments/nav.html) so the nav shows one
+   "Super Admin" parent instead of five flat links.
+
+   Why almost every selector here is heavier than the surrounding nav rules:
+   EVERY existing nav selector is a DESCENDANT selector and not one of them
+   uses a ">" combinator, so the submenu anchors still match
+   ".template-header nav a" and inherit DM Mono, uppercase, letter-spacing,
+   the inherited border-right, the :first-child border-left, and the hover
+   background. The block has to undo all of that.
+
+   Source order also matters: this file is link 4 in every template, but
+   welcoming-template.css is link 6 and declares ".template-header nav a" and
+   ".template-header nav a:first-child" at (0,2,2). An equal-specificity rule
+   added here would LOSE on source order, so the submenu anchors are targeted
+   as ".template-header nav ul.nav-submenu a" = (0,2,3) to win outright.
+
+   This lives here and NOT in static/css/admin.css: admin.css is only linked
+   on super-admin pages, but the nav renders on the public pages too, for a
+   logged-in super-admin.
+   ========================================================================== */
+
+/* No <ul> reset exists anywhere in the project, so the submenu's default
+   bullets, padding and margins have to be cleared by hand. (0,2,3). */
+.template-header nav ul.nav-submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 10;
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+  /* Wide enough for "ANNOUNCEMENTS" in uppercase DM Mono at 0.74rem plus the
+     17px inline padding inherited from the nav anchors. */
+  min-width: 236px;
+  /* Matches the active header background so the dropdown reads as part of
+     the bar rather than a panel floating over the page. */
+  background: #071118d9;
+  backdrop-filter: blur(14px);
+  border: 1px solid #274653;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  /* Hidden with opacity/transform ONLY -- never display:none or
+     visibility:hidden. Both of those drop the links out of the accessibility
+     tree, and the parent anchor can still be focused, which would then reveal
+     a menu a screen reader cannot see. pointer-events keeps the invisible
+     links unclickable. */
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+.template-header nav ul.nav-submenu li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The wrapper is the positioning context for the dropdown and a flex item of
+   the <nav> so the parent anchor lines up with the other nav links. */
+.template-header nav .nav-superadmin {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* The caret is a ::after on the PARENT ANCHOR, not the wrapper. On the wrapper
+   it rendered OUTSIDE the anchor's border box, i.e. after welcoming-template.css's
+   border-right separator, so it floated between the divider and the Logout form.
+   As the anchor's ::after it sits inside the border, before the separator, like
+   any other glyph in the menu. It is NOT real markup/text: the anchor's source
+   still reads exactly <a>Super Admin</a>, which is what the
+   NavFragmentTest.anchorIsActive() regex checks. */
+.template-header nav .nav-superadmin > a::after {
+  content: "\25BE";
+  margin-left: 7px;
+  color: #dceced;
+  font-size: 0.7rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* (0,2,3) beats the inherited ".template-header nav a" (0,2,2) even though
+   this file is linked earlier. Undoes the vertical separators and keeps the
+   anchors as full-width blocks. */
+.template-header nav ul.nav-submenu a {
+  display: block;
+  width: 100%;
+  padding: 8px 17px;
+  border: 0;
+  white-space: nowrap;
+}
+/* The first submenu anchor is the first child of its <li>, so the inherited
+   ".template-header nav a:first-child" (0,2,2) left border matches it. (0,3,3). */
+.template-header nav ul.nav-submenu a:first-child {
+  border-left: 0;
+}
+
+/* Reveal on hover AND on focus-within, so tabbing to the parent anchor opens
+   the menu for keyboard users too. (0,4,2) beats the hidden state (0,2,2). */
+.template-header nav .nav-superadmin:hover ul.nav-submenu,
+.template-header nav .nav-superadmin:focus-within ul.nav-submenu {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* Force the menu open whenever a module page is the current page. The
+   "current" class is on the WRAPPER rather than the parent anchor precisely so
+   this is possible: on /superadmin/team the active link is the one inside the
+   submenu, and a closed dropdown would hide the very link meant to be
+   highlighted. The parent anchor only gets class="active" on the exact
+   /superadmin URL, so this does not change its active semantics.
+
+   nav-about--current is the public About dropdown's counterpart: on /about
+   and /team it keeps the active "About Us" / "Our Team" item visible, which
+   would otherwise be trapped inside a collapsed menu. Both --current rules
+   sit at (0,3,2) specificity so the (0,4,2) --closed override below can still
+   win on a click and collapse the menu. */
+.template-header nav .nav-superadmin--current ul.nav-submenu,
+.template-header nav .nav-about--current ul.nav-submenu {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* Only pad the parent anchor's own hover/active background, so it spans the
+   whole wrapper instead of stopping at the text. (0,3,2). */
+.template-header nav .nav-superadmin:hover > a {
+  background: #183c4a;
+  color: #70d6c7;
+}
+.template-header nav .nav-superadmin:hover > a::after {
+  color: #70d6c7;
+}
+.template-header nav ul.nav-submenu a:focus-visible,
+.template-header nav .nav-superadmin > a:focus-visible {
+  outline: 2px solid #e6b64d;
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  /* At 760px and below ".template-header nav" is overflow-x: auto with
+     overflow-y: hidden, which CLIPS a dropdown hanging out of the nav. So the
+     submenu goes static and lays out inline with the rest of the links: all
+     four modules stay visible on mobile, which is the intended trade-off for
+     losing the collapsed state. Effective nav gap is 0, so the inline spacing
+     comes from the anchors' own padding. */
+  .template-header nav .nav-superadmin {
+    position: static;
+  }
+  .template-header nav ul.nav-submenu {
+    position: static;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .template-header nav ul.nav-submenu a {
+    padding: 8px;
+    border: 0;
+  }
+}
+
+/* ==========================================================================
+   About nav dropdown
+   --------------------------------------------------------------------------
+   The public /about navigation uses the same dropdown shape as Super Admin:
+   a parent <a> plus a ul.nav-submenu. It shares every .nav-submenu rule above
+   with the Super Admin menu -- the hidden state, the reveal, the mobile
+   layout -- so only the wrapper-specific rules are duplicated here.
+
+   The caret and the reveal colours are identical on purpose: the two
+   dropdowns are meant to read as a matched pair in the nav.
+   ========================================================================== */
+
+/* Wrapper: positioning context + flex item, identical to .nav-superadmin.
+   (0,2,2). */
+.template-header nav .nav-about {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Caret on the parent anchor, mirroring .nav-superadmin > a::after. The glyph
+   is a ::after on the ANCHOR -- not the wrapper, not a span, not text -- so the
+   anchor's source stays exactly <a>About</a>. Adding a child element here
+   would break NavFragmentTest.anchorIsActive(), which regexes the Super Admin
+   anchor's markup and must keep matching <a[^>]*>\s*Super Admin\s*</a>.
+   (0,2,3). */
+.template-header nav .nav-about > a::after {
+  content: "\25BE";
+  margin-left: 7px;
+  color: #dceced;
+  font-size: 0.7rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+/* Parent anchor hover, reusing the Super Admin teal so the two dropdowns read
+   as a matched pair. (0,3,2). */
+.template-header nav .nav-about:hover > a {
+  background: #183c4a;
+  color: #70d6c7;
+}
+.template-header nav .nav-about:hover > a::after {
+  color: #70d6c7;
+}
+
+/* Reveal on hover AND focus-within, mirroring the Super Admin rule, so
+   keyboard users tabbing onto the About anchor open the menu too. (0,4,2). */
+.template-header nav .nav-about:hover ul.nav-submenu,
+.template-header nav .nav-about:focus-within ul.nav-submenu {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* focus-visible outline, mirroring the Super Admin rule. Kept as its own rule
+   rather than appended to the existing selector group so no existing rule is
+   altered. */
+.template-header nav .nav-about > a:focus-visible {
+  outline: 2px solid #e6b64d;
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  /* Same mobile treatment as .nav-superadmin: the nav is overflow-x: auto with
+     overflow-y: hidden at this width and would CLIP an absolutely-positioned
+     dropdown, so the About wrapper goes static and the submenu lays out inline
+     with the rest of the links. (0,2,2), matching the desktop wrapper rule and
+     winning on source order inside the media query. */
+  .template-header nav .nav-about {
+    position: static;
+  }
+}
+
+/* ==========================================================================
+   JS-driven open/closed override
+   --------------------------------------------------------------------------
+   nav.html renders .nav-superadmin--current server-side on every
+   /superadmin/** page, and the rule above force-opens the dropdown on it.
+   Nothing could turn that off: on any module page the dropdown was stuck open
+   and clicking the parent anchor did nothing. These two rules let both
+   dropdowns be collapsed even when --current is present, and reopened when
+   the JS sets --open.
+
+    WHY THIS SECTION IS THE LAST BLOCK IN THE FILE, AND WHY ITS SPECIFICITY
+    MATTERS:
+    - The --current reveal rule is ".template-header nav
+      .nav-superadmin--current ul.nav-submenu" = (0,3,2).
+    - The --closed, --open, :hover, and :focus-within rules all sit at (0,4,2).
+      --closed ties with --open, :hover, and :focus-within at (0,4,2) and beats
+      them on SOURCE ORDER alone (it is the last block in the file), not on
+      specificity. It beats --current (0,3,2) on specificity.
+    - The mobile block in the Super Admin section above sets
+      ".template-header nav ul.nav-submenu" to opacity:1 inside
+      "@media (max-width: 760px)" = (0,2,2). This override is (0,4,2) -- four
+      classes beat two -- so it wins on specificity here too. But media queries
+      add no specificity of their own, and an equal- or lower-specificity rule
+      placed BEFORE that media query would lose to it on source order.
+      Placing this block AFTER every media query guarantees it wins at every
+      width, which is what makes the menu collapsible on mobile as well as
+      desktop. Do not move it earlier or "tidy" it into the media query -- that
+      reintroduces the bug.
+
+/* Open state: the JS adds .nav-superadmin--open / .nav-about--open to reveal
+   the dropdown, overriding even the --current force-open. (0,4,2). */
+.template-header nav .nav-superadmin.nav-superadmin--open ul.nav-submenu,
+.template-header nav .nav-about.nav-about--open ul.nav-submenu {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+/* Closed state: the JS adds --closed to collapse the dropdown. Beats the
+   --current reveal (0,3,2) on specificity. Ties with --open, :hover, and
+   :focus-within at (0,4,2) and beats them on SOURCE ORDER alone (last block
+   in file). Beats the mobile always-visible rule (0,2,2) on specificity.
+   (0,4,2). */
+.template-header nav .nav-superadmin.nav-superadmin--closed ul.nav-submenu,
+.template-header nav .nav-about.nav-about--closed ul.nav-submenu {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
 }

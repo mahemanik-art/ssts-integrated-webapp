@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Donor | Super Admin | SSTS</title>
+    <link rel="stylesheet" th:href="@{/css/site.css}" />
+    <link rel="stylesheet" th:href="@{/css/theme.css}" />
+    <link rel="stylesheet" th:href="@{/css/midnight-teal.css}" />
+    <link rel="stylesheet" th:href="@{/css/school-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/dark-gold.css}" />
+    <link rel="stylesheet" th:href="@{/css/welcoming-template.css}" />
+    <link rel="stylesheet" th:href="@{/css/fullscreen-dark.css}" />
+    <link rel="stylesheet" th:href="@{/css/floating-logo.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-size-large.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-compact.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-background.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-palette.css}" />
+    <link rel="stylesheet" th:href="@{/css/logo-recolor.css}" />
+    <link rel="stylesheet" th:href="@{/css/hero-full.css}" />
+    <link rel="stylesheet" th:href="@{/css/levels.css}" />
+    <link rel="stylesheet" th:href="@{/css/donors.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+  </head>
+
+  <body class="school-home">
+    <section class="donor-marquee" aria-label="">
+      <div class="marquee-track"></div>
+    </section>
+    <header th:replace="~{fragments/nav :: nav}"></header>
+
+    <main>
+      <section class="intro-section wrap">
+        <div class="page-heading">
+          <h1 th:text="${donor.id == null} ? 'New donor' : 'Edit donor'">New donor</h1>
+        </div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <!--
+          NOTE: this form posts to /superadmin/donors (create) or
+          /superadmin/donors/{id} (update), matching the controller. The photo
+          field is a real file input, so the form MUST be multipart.
+        -->
+        <form
+          class="admin-form"
+          method="post"
+          enctype="multipart/form-data"
+          th:object="${donor}"
+          th:action="${donor.id == null} ? @{/superadmin/donors} : @{'/superadmin/donors/' + ${donor.id}}"
+        >
+          <div class="form-row">
+            <label for="name">Name <span class="required">*</span></label>
+            <input id="name" type="text" th:field="*{name}" maxlength="255" required />
+            <small class="field-hint">As it should appear on the site. Must be unique.</small>
+          </div>
+
+          <div class="form-row">
+            <label for="tagline">Tagline</label>
+            <input id="tagline" type="text" th:field="*{tagline}" maxlength="255" />
+            <small class="field-hint">Short descriptor under the name, e.g. “Technology Services”.</small>
+          </div>
+
+          <div class="form-row">
+            <label for="websiteUrl">Website</label>
+            <input
+              id="websiteUrl"
+              type="url"
+              th:field="*{websiteUrl}"
+              maxlength="500"
+              placeholder="https://example.com"
+            />
+            <small class="field-hint">Full <code>https://</code> address. <code>http://</code> is rejected.</small>
+          </div>
+
+          <div class="form-row">
+            <label for="photoPath">Photo path</label>
+            <input
+              id="photoPath"
+              type="text"
+              th:field="*{photoPath}"
+              maxlength="500"
+              placeholder="/images/donors/example.jpg"
+            />
+            <small class="field-hint">
+              Either an <code>/images/...</code> path for a file committed to the repo, or an
+              <code>https://</code> bucket URL. Leave blank to use no photo.
+            </small>
+          </div>
+
+          <div class="form-row">
+            <label for="photo">Upload photo</label>
+            <input id="photo" type="file" name="photo" accept="image/*" />
+            <small class="field-hint" th:if="${!storageEnabled}">
+              Uploads are off on this server. Set <code>APP_STORAGE_ENABLED</code> and the bucket variables to enable
+              them; until then, paste an <code>/images/...</code> path above.
+            </small>
+            <small class="field-hint" th:if="${storageEnabled and donor.id == null}">
+              Save the donor first, then come back to upload its photo — a new donor has no id yet for the object folder
+              name.
+            </small>
+            <img
+              th:if="${donor.photoPath != null and !donor.photoPath.isEmpty()}"
+              th:src="@{${donor.photoPath}}"
+              th:alt="${'Current logo for ' + donor.name}"
+              style="width: 120px; margin-top: 8px; border-radius: 8px; object-fit: cover"
+            />
+          </div>
+
+          <div class="form-row">
+            <label for="displayOrder">Display order</label>
+            <input id="displayOrder" type="number" th:field="*{displayOrder}" min="0" step="1" />
+            <small class="field-hint">Lower sorts first in the carousel.</small>
+          </div>
+
+          <div class="form-row form-row--check">
+            <label>
+              <input type="checkbox" th:field="*{active}" />
+              <span>Active</span>
+            </label>
+            <small class="field-hint">Untick to stop working with this donor without deleting them.</small>
+          </div>
+
+          <div class="form-row form-row--check">
+            <label>
+              <input type="checkbox" th:field="*{publiclyListed}" />
+              <span>Show on the public site</span>
+            </label>
+            <small class="field-hint">
+              Consent flag. Off by default, because publishing a donor’s name without consent is a real problem.
+            </small>
+          </div>
+
+          <div class="form-row">
+            <label for="notes">Internal notes</label>
+            <textarea id="notes" th:field="*{notes}" rows="3"></textarea>
+            <small class="field-hint">Never shown publicly.</small>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="button">Save donor</button>
+            <a th:href="@{/superadmin/donors}" class="button button--ghost">Cancel</a>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <footer>
+      <div class="wrap">
+        <strong>Sandy Springs Tamil School</strong>
+        <span>4896 N Peachtree Rd, Dunwoody, GA 30338 · Friday evenings, 7:00–8:15 PM</span>
+      </div>
+    </footer>
+  </body>
+</html>

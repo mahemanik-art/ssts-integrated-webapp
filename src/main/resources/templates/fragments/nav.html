@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Navigation</title>
+  </head>
+  <body>
+    <!--
+      SINGLE SOURCE OF TRUTH for the site navigation.
+
+      Every template includes this with:
+        <header th:replace="~{fragments/nav :: nav}"></header>
+
+      Do NOT hand-write a header in a template again. The nav used to be copy-pasted
+      into all 22 pages and drifted badly: the public pages had no Dashboard/Logout
+      links, and the super-admin calendar/team screens had lost the Gallery and
+      Announcements module links entirely.
+
+      Model attributes used here are supplied to every controller by
+      controller/CommonModelAdvice.java: currentPath, isAuthenticated, isSuperAdmin.
+      isSuperAdmin comes from the ROLE, never from userType (see AGENTS.md).
+
+      Class names (.template-header, .header-logo, nav a.active, .logout-form,
+      .logout-button) are load-bearing -- several theme stylesheets target them.
+
+      Everything in this comment block is DELIBERATELY OUTSIDE the
+      th:fragment element: Thymeleaf copies HTML comments into the output, so a
+      note placed inside the fragment would ship in every page's HTML.
+    -->
+    <!--
+      The Super Admin block is a DROPDOWN, not eight flat links. The parent anchor
+      is the single entry point (/superadmin); the modules live in a
+      .nav-submenu <ul> beneath it. The wrapper carries nav-superadmin--current
+      whenever a module page is the current page, which forces the submenu open so
+      the active module link stays visible -- a closed dropdown would hide the very
+      link that is supposed to be highlighted. The parent anchor itself only gets
+      class="active" on the exact /superadmin URL.
+
+      The parent anchor text is EXACTLY "Super Admin" with no caret glyph inside
+      the <a> (a CSS ::after on the wrapper provides the indicator instead); the
+      test helper anchorIsActive() regexes <a[^>]*>\s*Super Admin\s*</a>.
+
+      Both dropdown parents are CLICK-TOGGLES that no longer navigate: the JS
+      (static/js/nav-dropdown.js) intercepts the click on the parent anchor and
+      opens or closes the submenu instead. That is why the Super Admin dropdown
+      carries an "Overview" item pointing at /superadmin -- the landing page
+      needs its own link now that the parent anchor is no longer a navigation.
+
+      The state classes are nav-about--open / nav-about--closed and
+      nav-superadmin--open / nav-superadmin--closed (toggled by the JS), while
+      nav-about--current and nav-superadmin--current are the SERVER-RENDERED
+      "this page lives inside this menu" markers. Both sets of class names are
+      load-bearing for static/css/school-template.css and
+      static/js/nav-dropdown.js -- do not rename them without updating both.
+
+      The About dropdown groups /about ("About Us") and /team ("Our Team") and
+      is PUBLIC -- it renders for logged-out visitors, unlike the Super Admin
+      dropdown, which is th:if'd on isSuperAdmin.
+
+      The logout form is a POST because Spring Security 6 form logout 404/405s
+      on GET; Thymeleaf injects the CSRF token into it via th:action.
+    -->
+    <header class="template-header wrap" th:fragment="nav">
+      <a th:href="@{/}" class="header-logo">
+        <img th:src="@{/images/ssts-logo.png}" alt="Sandy Springs Tamil School logo" />
+      </a>
+      <nav aria-label="Main navigation">
+        <a th:href="@{/}" th:classappend="${currentPath == '/'} ? 'active' : ''">Home</a>
+        <div
+          class="nav-about"
+          th:classappend="${currentPath == '/about' or currentPath == '/team' ? 'nav-about--current' : ''}"
+        >
+          <a
+            th:href="@{/about}"
+            aria-haspopup="true"
+            aria-expanded="false"
+            th:classappend="${currentPath == '/about'} ? 'active' : ''"
+            >About</a
+          >
+          <ul class="nav-submenu">
+            <li>
+              <a th:href="@{/about}" th:classappend="${currentPath == '/about'} ? 'active' : ''">About Us</a>
+            </li>
+            <li>
+              <a th:href="@{/team}" th:classappend="${currentPath == '/team'} ? 'active' : ''">Our Team</a>
+            </li>
+          </ul>
+        </div>
+        <a th:href="@{/calendar}" th:classappend="${currentPath == '/calendar'} ? 'active' : ''"> Calendar </a>
+        <a th:href="@{/gallery}" th:classappend="${currentPath == '/gallery'} ? 'active' : ''"> Gallery </a>
+        <a th:href="@{/contact}" th:classappend="${currentPath == '/contact'} ? 'active' : ''">Contact</a>
+
+        <a
+          th:if="${isAuthenticated and not isSuperAdmin}"
+          th:href="@{/dashboard}"
+          th:classappend="${currentPath == '/dashboard'} ? 'active' : ''"
+          >Dashboard</a
+        >
+
+        <div
+          class="nav-superadmin"
+          th:if="${isSuperAdmin}"
+          th:classappend="${currentPath == '/superadmin' or currentPath.startsWith('/superadmin/') ? 'nav-superadmin--current' : ''}"
+        >
+          <a
+            th:href="@{/superadmin}"
+            aria-haspopup="true"
+            aria-expanded="false"
+            th:classappend="${currentPath == '/superadmin'} ? 'active' : ''"
+            >Super Admin</a
+          >
+          <ul class="nav-submenu">
+            <li>
+              <a th:href="@{/superadmin}" th:classappend="${currentPath == '/superadmin'} ? 'active' : ''">Overview</a>
+            </li>
+            <li>
+              <a
+                th:href="@{/superadmin/announcements}"
+                th:classappend="${currentPath.startsWith('/superadmin/announcements')} ? 'active' : ''"
+                >Announcements</a
+              >
+            </li>
+            <li>
+              <a
+                th:href="@{/superadmin/calendar}"
+                th:classappend="${currentPath.startsWith('/superadmin/calendar')} ? 'active' : ''"
+                >Calendar Events</a
+              >
+            </li>
+            <li>
+              <a
+                th:href="@{/superadmin/gallery}"
+                th:classappend="${currentPath.startsWith('/superadmin/gallery')} ? 'active' : ''"
+                >Gallery Admin</a
+              >
+            </li>
+            <li>
+              <a
+                th:href="@{/superadmin/team}"
+                th:classappend="${currentPath.startsWith('/superadmin/team')} ? 'active' : ''"
+                >Team Members</a
+              >
+            </li>
+            <li>
+              <a
+                th:href="@{/superadmin/users}"
+                th:classappend="${currentPath.startsWith('/superadmin/users')} ? 'active' : ''"
+                >Users</a
+              >
+            </li>
+            <li>
+              <a
+                th:href="@{/superadmin/roles}"
+                th:classappend="${currentPath.startsWith('/superadmin/roles')} ? 'active' : ''"
+                >Roles</a
+              >
+            </li>
+            <li>
+              <a
+                th:href="@{/superadmin/donors}"
+                th:classappend="${currentPath.startsWith('/superadmin/donors')} ? 'active' : ''"
+                >Donors</a
+              >
+            </li>
+            <li>
+              <a
+                th:href="@{/superadmin/donations}"
+                th:classappend="${currentPath.startsWith('/superadmin/donations')} ? 'active' : ''"
+                >Donations</a
+              >
+            </li>
+            <li>
+              <a
+                th:href="@{/superadmin/reports}"
+                th:classappend="${currentPath.startsWith('/superadmin/reports')} ? 'active' : ''"
+                >Reports</a
+              >
+            </li>
+          </ul>
+        </div>
+
+        <form th:if="${isAuthenticated}" th:action="@{/logout}" method="post" class="logout-form">
+          <button type="submit" class="logout-button">Logout</button>
+        </form>
+        <script th:src="@{/js/nav-dropdown.js}"></script>
+      </nav>
+    </header>
+  </body>
+</html>
